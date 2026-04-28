@@ -68,7 +68,7 @@ namespace Nexus_Team.views {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/App_LernPlaner;component/views/loginpage.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/App_LernPlaner;V1.0.0.0;component/views/loginpage.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\Views\LogInPage.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);
