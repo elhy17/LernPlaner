@@ -8,17 +8,26 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Nexus_Team.views;
 
-namespace App_LernPlaner
+namespace Nexus_Team
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
+
+
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
+            ShowLoginPage();
         }
+
+
+
+        private void ShowLoginPage()
+        {
+            MainFrame.Navigate(new LoginPage());
+        }
+
     }
 }
