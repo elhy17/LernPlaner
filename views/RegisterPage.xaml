@@ -1,0 +1,71 @@
+﻿<Page x:Class="Nexus_Team.views.RegisterPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:lottie="clr-namespace:LottieSharp.WPF;assembly=LottieSharp"
+      Title="Registrieren" Background="#F4F7F6">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1.2*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" Background="#E8F8F5" CornerRadius="0,30,30,0">
+            <StackPanel VerticalAlignment="Center">
+               
+                <TextBlock Text="Werde Teil des Teams!" FontSize="22" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+
+        <Button Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20" 
+                Background="Transparent" BorderThickness="0" Cursor="Hand" Click="BtnBack_Click" Panel.ZIndex="1">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="←" FontSize="24" FontWeight="Bold" Foreground="#4A90E2" Margin="0,0,10,0"/>
+                <TextBlock Text="Zurück" VerticalAlignment="Center" Foreground="#4A90E2"/>
+            </StackPanel>
+        </Button>
+
+        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel VerticalAlignment="Center" Margin="60,40">
+                <TextBlock Text="Konto erstellen" FontSize="28" FontWeight="Bold" Margin="0,0,0,20" HorizontalAlignment="Center"/>
+
+                <TextBlock Text="Benutzername"/>
+                <TextBox x:Name="txtRegUser" Height="30" Margin="0,5,0,10"/>
+
+                <TextBlock Text="E-Mail Adresse"/>
+                <TextBox x:Name="txtEmail" Height="30" Margin="0,5,0,10"/>
+
+                <Grid Margin="0,0,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" Margin="0,0,5,0">
+                        <TextBlock Text="Alter"/>
+                        <TextBox x:Name="txtAge" Height="30" Margin="0,5"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                        <TextBlock Text="Rolle"/>
+                        <ComboBox x:Name="cbRole" Height="30" Margin="0,5">
+                            <ComboBoxItem Content="Schüler" IsSelected="True"/>
+                            <ComboBoxItem Content="Lehrer"/>
+                            <ComboBoxItem Content="IT-Admin"/>
+                        </ComboBox>
+                    </StackPanel>
+                </Grid>
+
+                <TextBlock Text="Passwort"/>
+                <PasswordBox x:Name="txtPass" Height="30" Margin="0,5,0,10"/>
+
+                <CheckBox x:Name="chkTerms" Margin="0,10,0,20">
+                    <TextBlock TextWrapping="Wrap" Text="Ich akzeptiere die Nutzungsbedingungen der Schule."/>
+                </CheckBox>
+
+                <Button Content="Registrieren" Background="#2ECC71" Foreground="White" 
+                        FontWeight="Bold" Height="40" Click="BtnRegister_Click"/>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>
