@@ -11,7 +11,7 @@
 
         <Border Grid.Column="0" Background="#E8F8F5" CornerRadius="0,30,30,0">
             <StackPanel VerticalAlignment="Center">
-
+                <Image Source="../image-removebg-preview.png" Width="180" Height="191" Margin="0,0,0,20"/>
                 <TextBlock Text="Werde Teil des Teams!" FontSize="22" HorizontalAlignment="Center"/>
             </StackPanel>
         </Border>
@@ -29,10 +29,11 @@
                 <TextBlock Text="Konto erstellen" FontSize="28" FontWeight="Bold" Margin="0,0,0,20" HorizontalAlignment="Center"/>
 
                 <TextBlock Text="Benutzername"/>
-                <TextBox x:Name="txtRegUser" Height="30" Margin="0,5,0,10"/>
+                <TextBox x:Name="txtRegUser" Height="30" Margin="0,5,0,10" FontSize="14"/>
 
                 <TextBlock Text="E-Mail Adresse"/>
-                <TextBox x:Name="txtEmail" Height="30" Margin="0,5,0,10"/>
+                <TextBox x:Name="txtEmail" Height="30" Margin="0,5,0,0" FontSize="14"/>
+                <TextBlock x:Name="lblEmailError" Text="Bitte geben Sie eine gültige E-Mail-Adresse ein." Foreground="Red" FontSize="11" Visibility="Collapsed" Margin="0,0,0,10"/>
 
                 <Grid Margin="0,0,0,10">
                     <Grid.ColumnDefinitions>
@@ -42,7 +43,7 @@
 
                     <StackPanel Grid.Column="0" Margin="0,0,5,0">
                         <TextBlock Text="Alter"/>
-                        <TextBox x:Name="txtAge" Height="30" Margin="0,5"/>
+                        <TextBox x:Name="txtAge" Height="30" Margin="0,5" FontSize="14"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="1" Margin="5,0,0,0">
@@ -56,7 +57,8 @@
                 </Grid>
 
                 <TextBlock Text="Passwort"/>
-                <PasswordBox x:Name="txtPass" Height="30" Margin="0,5,0,10"/>
+                <PasswordBox x:Name="txtPass" Height="30" Margin="0,5,0,0" FontSize="14"/>
+                <TextBlock x:Name="lblPassError" Text="Passwort zu schwach (Min. 8 Zeichen, mind. 1 Großbuchstabe, mind. 1 Zahl)." Foreground="Red" FontSize="11" TextWrapping="Wrap" Visibility="Collapsed" Margin="0,0,0,10"/>
 
                 <CheckBox x:Name="chkTerms" Margin="0,10,0,20">
                     <TextBlock TextWrapping="Wrap" Text="Ich akzeptiere die Nutzungsbedingungen der Schule."/>
