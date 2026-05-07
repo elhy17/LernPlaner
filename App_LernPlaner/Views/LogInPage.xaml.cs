@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using App_LernPlaner.Services;
+using App_LernPlaner.Views;
 
 namespace Nexus_Team.views
 {
@@ -29,8 +31,22 @@ namespace Nexus_Team.views
 
         private void BtnLogin_Click(object sender, RoutedEventArgs e)
         {
+            string uN  = txtUsername.Text.ToLower().Trim();
+            string passwordNotHashed = txtPassword.Password;
+            if (string.IsNullOrEmpty(uN) || string.IsNullOrEmpty(passwordNotHashed)) MessageBox.Show("ungutige eingaben!");
 
-            //todo
+            else 
+            {
+                var login = new logIn(uN, passwordNotHashed);
+
+                if (login.IsSuccessful == true)
+                {
+
+                    NavigationService.Navigate(new DashBoardPage());
+                }
+            }
+
+
         }
 
         private void BtnGoToRegister_Click(object sender, RoutedEventArgs e)
@@ -38,6 +54,6 @@ namespace Nexus_Team.views
             NavigationService.Navigate(new RegisterPage());
         }
 
-
+       
     }
 }
