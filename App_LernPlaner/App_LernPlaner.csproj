@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+
     <None Remove="image-removebg-preview.png" />
   </ItemGroup>
 
@@ -24,6 +25,5 @@
 
   <ItemGroup>
     <Resource Include="image-removebg-preview.png" />
-  </ItemGroup>
 
 </Project>
