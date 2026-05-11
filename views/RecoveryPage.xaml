@@ -1,0 +1,17 @@
+﻿<Page x:Class="Nexus_Team.views.RecoveryPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Wiederherstellen" Background="#F4F7F6">
+    <Grid>
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="350">
+            <TextBlock Text="Konto wiederherstellen" FontSize="24" FontWeight="Bold" Margin="0,0,0,20" HorizontalAlignment="Center"/>
+            <TextBlock Text="Gib deine E-Mail Adresse ein, um dein Passwort zurückzusetzen." TextWrapping="Wrap" Margin="0,0,0,20" TextAlignment="Center"/>
+
+            <TextBlock Text="E-Mail Adresse"/>
+            <TextBox Height="35" Margin="0,5,0,20"/>
+
+            <Button Content="Passwort zurücksetzen" Background="#4A90E2" Foreground="White" Height="40" Click="BtnReset_Click"/>
+            <Button Content="Abbrechen" Background="Transparent" BorderThickness="0" Margin="0,10" Click="BtnBackToLogin_Click"/>
+        </StackPanel>
+    </Grid>
+</Page>
