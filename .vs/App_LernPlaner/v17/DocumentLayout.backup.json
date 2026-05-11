@@ -3,12 +3,32 @@
   "WorkspaceRootPath": "C:\\Users\\bib\\Desktop\\Projekt_SOP\\App_LernPlaner\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{92F03D35-CA8F-4F2D-81CB-85DBDA2E137B}|App_LernPlaner\\App_LernPlaner.csproj|c:\\users\\bib\\desktop\\projekt_sop\\app_lernplaner\\app_lernplaner\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{92F03D35-CA8F-4F2D-81CB-85DBDA2E137B}|App_LernPlaner\\App_LernPlaner.csproj|solutionrelative:app_lernplaner\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+      "AbsoluteMoniker": "D:0:0:{92F03D35-CA8F-4F2D-81CB-85DBDA2E137B}|App_LernPlaner\\App_LernPlaner.csproj|c:\\users\\bib\\desktop\\projekt_sop\\app_lernplaner\\app_lernplaner\\models\\subtask.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{92F03D35-CA8F-4F2D-81CB-85DBDA2E137B}|App_LernPlaner\\App_LernPlaner.csproj|solutionrelative:app_lernplaner\\models\\subtask.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{92F03D35-CA8F-4F2D-81CB-85DBDA2E137B}|App_LernPlaner\\App_LernPlaner.csproj|c:\\users\\bib\\desktop\\projekt_sop\\app_lernplaner\\app_lernplaner\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{92F03D35-CA8F-4F2D-81CB-85DBDA2E137B}|App_LernPlaner\\App_LernPlaner.csproj|solutionrelative:app_lernplaner\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{92F03D35-CA8F-4F2D-81CB-85DBDA2E137B}|App_LernPlaner\\App_LernPlaner.csproj|c:\\users\\bib\\desktop\\projekt_sop\\app_lernplaner\\app_lernplaner\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{92F03D35-CA8F-4F2D-81CB-85DBDA2E137B}|App_LernPlaner\\App_LernPlaner.csproj|solutionrelative:app_lernplaner\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{92F03D35-CA8F-4F2D-81CB-85DBDA2E137B}|App_LernPlaner\\App_LernPlaner.csproj|c:\\users\\bib\\desktop\\projekt_sop\\app_lernplaner\\app_lernplaner\\models\\class.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{92F03D35-CA8F-4F2D-81CB-85DBDA2E137B}|App_LernPlaner\\App_LernPlaner.csproj|solutionrelative:app_lernplaner\\models\\class.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{92F03D35-CA8F-4F2D-81CB-85DBDA2E137B}|App_LernPlaner\\App_LernPlaner.csproj|c:\\users\\bib\\desktop\\projekt_sop\\app_lernplaner\\app_lernplaner\\models\\classmember.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{92F03D35-CA8F-4F2D-81CB-85DBDA2E137B}|App_LernPlaner\\App_LernPlaner.csproj|solutionrelative:app_lernplaner\\models\\classmember.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{92F03D35-CA8F-4F2D-81CB-85DBDA2E137B}|App_LernPlaner\\App_LernPlaner.csproj|c:\\users\\bib\\desktop\\projekt_sop\\app_lernplaner\\app_lernplaner\\models\\task.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{92F03D35-CA8F-4F2D-81CB-85DBDA2E137B}|App_LernPlaner\\App_LernPlaner.csproj|solutionrelative:app_lernplaner\\models\\task.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{92F03D35-CA8F-4F2D-81CB-85DBDA2E137B}|App_LernPlaner\\App_LernPlaner.csproj|c:\\users\\bib\\desktop\\projekt_sop\\app_lernplaner\\app_lernplaner\\models\\studysession.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{92F03D35-CA8F-4F2D-81CB-85DBDA2E137B}|App_LernPlaner\\App_LernPlaner.csproj|solutionrelative:app_lernplaner\\models\\studysession.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{92F03D35-CA8F-4F2D-81CB-85DBDA2E137B}|App_LernPlaner\\App_LernPlaner.csproj|c:\\users\\bib\\desktop\\projekt_sop\\app_lernplaner\\app_lernplaner\\models\\tag.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{92F03D35-CA8F-4F2D-81CB-85DBDA2E137B}|App_LernPlaner\\App_LernPlaner.csproj|solutionrelative:app_lernplaner\\models\\tag.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,7 +38,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 102,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Bookmark",
@@ -26,27 +46,89 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ClassMember.cs",
+              "DocumentMoniker": "C:\\Users\\bib\\Desktop\\Projekt_SOP\\App_LernPlaner\\App_LernPlaner\\Models\\ClassMember.cs",
+              "RelativeDocumentMoniker": "App_LernPlaner\\Models\\ClassMember.cs",
+              "ToolTip": "C:\\Users\\bib\\Desktop\\Projekt_SOP\\App_LernPlaner\\App_LernPlaner\\Models\\ClassMember.cs",
+              "RelativeToolTip": "App_LernPlaner\\Models\\ClassMember.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-04T08:07:21.22Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Class.cs",
+              "DocumentMoniker": "C:\\Users\\bib\\Desktop\\Projekt_SOP\\App_LernPlaner\\App_LernPlaner\\Models\\Class.cs",
+              "RelativeDocumentMoniker": "App_LernPlaner\\Models\\Class.cs",
+              "ToolTip": "C:\\Users\\bib\\Desktop\\Projekt_SOP\\App_LernPlaner\\App_LernPlaner\\Models\\Class.cs",
+              "RelativeToolTip": "App_LernPlaner\\Models\\Class.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-04T08:04:11.476Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Task.cs",
+              "DocumentMoniker": "C:\\Users\\bib\\Desktop\\Projekt_SOP\\App_LernPlaner\\App_LernPlaner\\Models\\Task.cs",
+              "RelativeDocumentMoniker": "App_LernPlaner\\Models\\Task.cs",
+              "ToolTip": "C:\\Users\\bib\\Desktop\\Projekt_SOP\\App_LernPlaner\\App_LernPlaner\\Models\\Task.cs",
+              "RelativeToolTip": "App_LernPlaner\\Models\\Task.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAAAUwCkAAAA0AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T19:46:54.038Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "StudySession.cs",
+              "DocumentMoniker": "C:\\Users\\bib\\Desktop\\Projekt_SOP\\App_LernPlaner\\App_LernPlaner\\Models\\StudySession.cs",
+              "RelativeDocumentMoniker": "App_LernPlaner\\Models\\StudySession.cs",
+              "ToolTip": "C:\\Users\\bib\\Desktop\\Projekt_SOP\\App_LernPlaner\\App_LernPlaner\\Models\\StudySession.cs",
+              "RelativeToolTip": "App_LernPlaner\\Models\\StudySession.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABEAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T20:15:10.263Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Tag.cs",
+              "DocumentMoniker": "C:\\Users\\bib\\Desktop\\Projekt_SOP\\App_LernPlaner\\App_LernPlaner\\Models\\Tag.cs",
+              "RelativeDocumentMoniker": "App_LernPlaner\\Models\\Tag.cs",
+              "ToolTip": "C:\\Users\\bib\\Desktop\\Projekt_SOP\\App_LernPlaner\\App_LernPlaner\\Models\\Tag.cs",
+              "RelativeToolTip": "App_LernPlaner\\Models\\Tag.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T20:04:46.028Z"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "MainWindow.xaml",
-              "DocumentMoniker": "C:\\Users\\bib\\Desktop\\Projekt_SOP\\App_LernPlaner\\App_LernPlaner\\MainWindow.xaml",
-              "RelativeDocumentMoniker": "App_LernPlaner\\MainWindow.xaml",
-              "ToolTip": "C:\\Users\\bib\\Desktop\\Projekt_SOP\\App_LernPlaner\\App_LernPlaner\\MainWindow.xaml",
-              "RelativeToolTip": "App_LernPlaner\\MainWindow.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2026-04-27T12:20:39.286Z",
+              "Title": "SubTask.cs",
+              "DocumentMoniker": "C:\\Users\\bib\\Desktop\\Projekt_SOP\\App_LernPlaner\\App_LernPlaner\\Models\\SubTask.cs",
+              "RelativeDocumentMoniker": "App_LernPlaner\\Models\\SubTask.cs",
+              "ToolTip": "C:\\Users\\bib\\Desktop\\Projekt_SOP\\App_LernPlaner\\App_LernPlaner\\Models\\SubTask.cs",
+              "RelativeToolTip": "App_LernPlaner\\Models\\SubTask.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T20:04:17.468Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "MainWindow.xaml.cs",
-              "DocumentMoniker": "C:\\Users\\bib\\Desktop\\Projekt_SOP\\App_LernPlaner\\App_LernPlaner\\MainWindow.xaml.cs",
-              "RelativeDocumentMoniker": "App_LernPlaner\\MainWindow.xaml.cs",
-              "ToolTip": "C:\\Users\\bib\\Desktop\\Projekt_SOP\\App_LernPlaner\\App_LernPlaner\\MainWindow.xaml.cs",
-              "RelativeToolTip": "App_LernPlaner\\MainWindow.xaml.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\Users\\bib\\Desktop\\Projekt_SOP\\App_LernPlaner\\App_LernPlaner\\Models\\User.cs",
+              "RelativeDocumentMoniker": "App_LernPlaner\\Models\\User.cs",
+              "ToolTip": "C:\\Users\\bib\\Desktop\\Projekt_SOP\\App_LernPlaner\\App_LernPlaner\\Models\\User.cs",
+              "RelativeToolTip": "App_LernPlaner\\Models\\User.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-27T12:20:38.637Z",
+              "WhenOpened": "2026-04-30T19:24:22.382Z",
               "EditorCaption": ""
             }
           ]

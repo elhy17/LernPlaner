@@ -9,11 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
-    <Folder Include="Database\" />
-    <Folder Include="Helpers\" />
-    <Folder Include="Views\" />
-    <Folder Include="Services\" />
+    <Folder Include="Resources\Icons\" />
+    <Folder Include="Resources\Images\" />
+    <Folder Include="Views\Kalender\" />
+    <Folder Include="Views\Admin\" />
+    <Folder Include="Views\Profile\" />
   </ItemGroup>
 
 </Project>
