@@ -10,19 +10,20 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace App_LernPlaner.Views
 {
     /// <summary>
-    /// Interaction logic for DashBoardPage.xaml
+    /// Interaktionslogik für DashboardPage.xaml
     /// </summary>
-    public partial class DashBoardPage : Page
+    public partial class DashboardPage : Page
     {
-        public DashBoardPage()
+        public DashboardPage()
         {
             InitializeComponent();
+            txtDatum.Text = DateTime.Now.ToString("ddd, dd. MMMM yyyy");
+            DataContext = new ViewModels.DashboardViewModel();
         }
     }
 }

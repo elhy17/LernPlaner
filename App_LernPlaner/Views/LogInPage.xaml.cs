@@ -42,7 +42,7 @@ namespace Nexus_Team.views
                 if (login.IsSuccessful == true)
                 {
 
-                    NavigationService.Navigate(new DashBoardPage());
+                    // NavigationService.Navigate(new DashBoardPage());
                 }
             }
 

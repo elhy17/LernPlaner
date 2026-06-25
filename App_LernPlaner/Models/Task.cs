@@ -10,10 +10,10 @@ namespace App_LernPlaner.Models
     {
         public int TaskId { get; set; }
         public int UserId { get; set; }
-
+        public string ButtonText { get; set; }
         public int? ClassId { get; set; }
         public int? CreatedBy { get; set; }
-        public string Title { get; set; }
+        public string Titel { get; set; }
         public string Subject { get; set; }
         public DateTime Deadline { get; set; }
         public byte Priority { get; set; } // Wenn 1= Niedrig, 2= Mittel, 3 = Hoch

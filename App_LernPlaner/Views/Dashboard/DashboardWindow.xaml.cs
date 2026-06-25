@@ -1,27 +1,34 @@
-﻿using System;
+﻿using App_LernPlaner.Database;
+using App_LernPlaner.Models;
+using MySql.Data.MySqlClient;
+using Nexus_Team;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace App_LernPlaner.Views.Dashboard
 {
-    /// <summary>
-    /// Interaktionslogik für DashboardWindow.xaml
-    /// </summary>
+
     public partial class DashboardWindow : Window
     {
         public DashboardWindow()
         {
             InitializeComponent();
+            MainFrame.Navigate(new App_LernPlaner.Views.DashboardPage());
+        }
+
+        private void Aufgaben_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new App_LernPlaner.Views.AufgabenPage());
+        }
+
+        private void Dashboard_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new App_LernPlaner.Views.DashboardPage());
         }
     }
 }
