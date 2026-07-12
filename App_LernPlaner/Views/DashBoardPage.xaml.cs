@@ -22,8 +22,17 @@ namespace App_LernPlaner.Views
         public DashboardPage()
         {
             InitializeComponent();
-            txtDatum.Text = DateTime.Now.ToString("ddd, dd. MMMM yyyy");
-            DataContext = new ViewModels.DashboardViewModel();
+            var viewModel = new ViewModels.DashboardViewModel();
+            DataContext = viewModel;
+
+            Loaded += (_, _) =>
+            {
+                if (viewModel.LoadDashboardCommand.CanExecute(null))
+                {
+                    viewModel.LoadDashboardCommand.Execute(null);
+                }
+            };
+
         }
     }
 }

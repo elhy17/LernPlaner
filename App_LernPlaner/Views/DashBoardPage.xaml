@@ -21,13 +21,13 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0"
-                           Text="Guten Morgen, Amine 👋"
+                           Text="{Binding GrettingText}"
                            Foreground="White"
                            FontSize="22"
                            FontWeight="Bold"
                            VerticalAlignment="Center"/>
 
-                <TextBlock x:Name="txtDatum"
+                <TextBlock Text="{Binding CurrentDateText}"
                            Grid.Column="1"
                            Foreground="#9CA3AF"
                            VerticalAlignment="Center"
@@ -63,7 +63,7 @@
                     <TextBlock Text="Offene Aufgaben" Foreground="#A1A1AA" FontSize="13"/>
                     <TextBlock Text="{Binding OffeneAufgaben}" Foreground="White"
                                FontSize="28" FontWeight="Bold" Margin="0,5,0,0"/>
-                    <TextBlock Text="2 fällig diese Woche" Foreground="#71717A" FontSize="12"/>
+                    <TextBlock Text="{Binding FaelligDieseWoche, StringFormat={}{0} fällig diese Woche}" Foreground="#71717A" FontSize="12"/>
                 </StackPanel>
             </Border>
 
@@ -72,7 +72,7 @@
                     Margin="10" BorderBrush="#2A2A2A" BorderThickness="1">
                 <StackPanel>
                     <TextBlock Text="Abgegeben" Foreground="#A1A1AA"/>
-                    <TextBlock Text="18" Foreground="White"
+                    <TextBlock Text="{Binding Abgegeben}" Foreground="White"
                                FontSize="28" FontWeight="Bold" Margin="0,5,0,0"/>
                     <TextBlock Text="davon 16 pünktlich" Foreground="#71717A" FontSize="12"/>
                 </StackPanel>
@@ -83,7 +83,7 @@
                     Margin="10" BorderBrush="#2A2A2A" BorderThickness="1">
                 <StackPanel>
                     <TextBlock Text="Durchschnittsnote" Foreground="#A1A1AA"/>
-                    <TextBlock Text="2,3" Foreground="White"
+                    <TextBlock Text="{Binding Durchschnittsnote}" Foreground="White"
                                FontSize="28" FontWeight="Bold" Margin="0,5,0,0"/>
                     <TextBlock Text="letzten 30 Tage" Foreground="#71717A" FontSize="12"/>
                 </StackPanel>
@@ -94,7 +94,7 @@
                     Margin="10" BorderBrush="#2A2A2A" BorderThickness="1">
                 <StackPanel>
                     <TextBlock Text="XP Gesamt" Foreground="#A1A1AA"/>
-                    <TextBlock Text="680" Foreground="White"
+                    <TextBlock Text="{Binding XpGesamt}" Foreground="White"
                                FontSize="28" FontWeight="Bold" Margin="0,5,0,0"/>
                     <TextBlock Text="Rang 3 in der Klasse" Foreground="#71717A" FontSize="12"/>
                 </StackPanel>
@@ -117,6 +117,7 @@
 
                     <ListView Grid.Row="1"
                               ItemsSource="{Binding Aufgaben}"
+                              SelectedItem="{Binding SelectedTask, Mode=TwoWay}"
                               Background="Transparent"
                               BorderThickness="0" FontSize="13"
                               ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -164,7 +165,7 @@
                                 <GridViewColumn Header="Deadline" Width="140">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding Deadline, StringFormat=dd.MM.yyyy}"
+                                            <TextBlock Text="{Binding Deadline, StringFormat={}{0:dd.MM.yyyy}}"
                                                        Foreground="#9CA3AF"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
@@ -215,7 +216,8 @@
                                                     Cursor="Hand"
                                                     Background="#2563EB"
                                                     Foreground="White"
-                                                    BorderThickness="0">
+                                                    BorderThickness="0"
+                                                    Command="{Binding DataContext.OpenTaskCommand,RelativeSource={RelativeSource AncestorType=ListView}}">
                                                 <Button.Template>
                                                     <ControlTemplate TargetType="Button">
                                                         <Border Background="{TemplateBinding Background}"

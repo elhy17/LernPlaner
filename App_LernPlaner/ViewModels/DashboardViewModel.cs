@@ -1,17 +1,45 @@
-﻿using System;
+﻿using App_LernPlaner.Models;
+using App_LernPlaner.Services;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.Windows;
-using App_LernPlaner.Models;
-using App_LernPlaner.Services;
+using System.Windows.Input;
 
 namespace App_LernPlaner.ViewModels
 {
     public class DashboardViewModel : INotifyPropertyChanged
     {
         private readonly Services.TaskService _taskService;
-        public ObservableCollection<Models.Task> Aufgaben { get; set; }
+        private readonly int _currentUserId;
+        public ObservableCollection<Models.StudyTask> Aufgaben { get; set; }
+
+
+        private string _grettingText;
+        public string GrettingText
+        {
+            get => _grettingText;
+            set
+            {
+                _grettingText = value;
+                OnPropertyChanged(nameof(GrettingText));
+            }
+        }
+
+        private string _currentDateText;
+        public string CurrentDateText
+        {
+            get => _currentDateText;
+            set
+            {
+                _currentDateText = value;
+                OnPropertyChanged(nameof(CurrentDateText));
+            }
+        }
+
+
         private int _offeneAufgaben;
         public int OffeneAufgaben
         {
@@ -23,39 +51,126 @@ namespace App_LernPlaner.ViewModels
             }
         }
 
+        private int _abgegeben;
+        public int Abgegeben
+        {
+            get => _abgegeben;
+            set
+            {
+                _abgegeben = value;
+                OnPropertyChanged(nameof(Abgegeben));
+            }
+        }
+
+        private int _faelligDieseWoche;
+        public int FaelligDieseWoche
+        {
+            get => _faelligDieseWoche;
+            set
+            {
+                _faelligDieseWoche = value;
+                OnPropertyChanged(nameof(FaelligDieseWoche));
+            }
+        }
+
+        private string _durchschnittsnote;
+        public string Durchschnittsnote
+        {
+            get => _durchschnittsnote;
+            set
+            {
+                _durchschnittsnote = value;
+                OnPropertyChanged(nameof(Durchschnittsnote));
+            }
+        }
+
+        private int _xpGesamt;
+        public int XpGesamt
+        {
+            get => _xpGesamt;
+            set
+            {
+                _xpGesamt = value;
+                OnPropertyChanged(nameof(XpGesamt));
+            }
+        }
+
+        private StudyTask? _selectedTask;
+        public StudyTask? SelectedTask
+        {
+            get => _selectedTask;
+            set
+            {
+                _selectedTask = value;
+                OnPropertyChanged(nameof(SelectedTask));
+            }
+        }
+
+        public ICommand LoadDashboardCommand { get;  }
+        public ICommand RefreshCommand { get; }
+        public ICommand OpenTasksCommand { get; }
+
+
+
         public DashboardViewModel()
         {
             _taskService = new TaskService();
-            Aufgaben = new ObservableCollection<Models.Task>();
-            _ = LoadDataAsync();
+
+            _currentUserId = 1; // Hier kommt user später bei Login
+            Aufgaben = new ObservableCollection<Models.StudyTask>();
+
+           GrettingText = "Guten Morgen, Amine 👋";
+
+            CurrentDateText = DateTime.Now.ToString("ddd, dd. MMMM yyyy", new CultureInfo("de-DE"));
+
+            Durchschnittsnote = "2,3";
+
+            XpGesamt = 680;
+
+            LoadDashboardCommand = new Commands.AsyncRelayCommand(LoadDashboardAsync);
+            RefreshCommand = new Commands.AsyncRelayCommand(LoadDashboardAsync);
+            OpenTasksCommand = new Commands.RelayCommand(OpenTask);
+
         }
 
-        private async System.Threading.Tasks.Task LoadDataAsync()
+        private async Task LoadDashboardAsync()
         {
             try
             {
+                var tasks = await _taskService.GetTasksByUserIdAsync(_currentUserId); 
+
                 Aufgaben.Clear();
-                var tasks = await _taskService.GetTasksAsync();
+
                 foreach (var task in tasks)
                 {
                     Aufgaben.Add(task);
                 }
 
-                OffeneAufgaben = await _taskService.GetOpenTaskCountAsync();
+                OffeneAufgaben = _taskService.CountOpenTasks(tasks);
+                Abgegeben = _taskService.CountFinishedTasks(tasks);
+                FaelligDieseWoche = _taskService.CountDueThisWeek(tasks);
+
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
-                    "Daten konnten nicht geladen werden.\n\n" +
-                    "Bitte prüfe, ob der Datenbankserver (MySQL) läuft.\n\n" +
-                    "Details: " + ex.Message,
-                    "Verbindungsfehler",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Warning);
+               MessageBox.Show("Daten konnten nicht geladen werden: " + ex.Message);
             }
+
+
         }
 
+         private void OpenTask()
+         {
+            if (SelectedTask == null)
+            {
+                MessageBox.Show("Bitte zuerst eine Aufgabe auswählen.");
+                return;
+            }
 
+            MessageBox.Show("Ausgewählte Aufgabe: " + SelectedTask.Titel);
+  
+         }
+ 
 
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged(string propertyName)

@@ -16,7 +16,8 @@
         <Frame x:Name="MainFrame"
            Margin="230,0,0,0"
            NavigationUIVisibility="Hidden"
-           Background="#0B1120"/>
+           Background="#0B1120"
+           Content="{Binding CurrentPage}"/>
 
         <Border Width="230"
         Background="#111827"
@@ -77,7 +78,7 @@
                        Margin="0,0,0,15"/>
 
                     <!-- DASHBOARD -->
-                    <Button Style="{StaticResource SidebarButton}" Click="Dashboard_Click">
+                    <Button Style="{StaticResource SidebarButton}" Command="{Binding NavigateDashboardCommand}">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="⌂" FontSize="14" VerticalAlignment="Center"/>
                             <TextBlock Text="Dashboard" FontSize="14" Margin="12,0,0,0" VerticalAlignment="Center"/>
@@ -85,7 +86,7 @@
                     </Button>
 
                     <!-- AUFGABEN -->
-                    <Button Style="{StaticResource SidebarButton}" Click="Aufgaben_Click">
+                    <Button Style="{StaticResource SidebarButton}" Command="{Binding NavigateAufgabenCommand}">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="☰" FontSize="14" VerticalAlignment="Center"/>
                             <TextBlock Text="Aufgaben" FontSize="14" Margin="10,0,0,0" VerticalAlignment="Center"/>

@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace App_LernPlaner.Models
 {
-    public class Task
+    public class StudyTask
     {
         public int TaskId { get; set; }
         public int UserId { get; set; }
-        public string ButtonText { get; set; }
+        public string ButtonText { get; set; } 
         public int? ClassId { get; set; }
         public int? CreatedBy { get; set; }
         public string Titel { get; set; }

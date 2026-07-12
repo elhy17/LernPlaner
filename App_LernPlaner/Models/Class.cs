@@ -14,6 +14,6 @@ namespace App_LernPlaner.Models
         public string JoinCode { get; set; } // zufällig generierter code
         public DateTime CreatedAt { get; set; }
         public List<ClassMember> Members { get; set; } = new();
-        public List<Task> Tasks { get; set; } = new();
+        public List<StudyTask> Tasks { get; set; } = new();
     }
 }
