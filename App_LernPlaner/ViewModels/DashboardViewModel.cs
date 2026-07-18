@@ -1,4 +1,5 @@
-﻿using App_LernPlaner.Models;
+﻿using App_LernPlaner.Commands;
+using App_LernPlaner.Models;
 using App_LernPlaner.Services;
 using System;
 using System.Collections.Generic;
@@ -18,13 +19,13 @@ namespace App_LernPlaner.ViewModels
 
 
         private string _grettingText;
-        public string GrettingText
+        public string GreettingText
         {
             get => _grettingText;
             set
             {
                 _grettingText = value;
-                OnPropertyChanged(nameof(GrettingText));
+                OnPropertyChanged(nameof(GreettingText));
             }
         }
 
@@ -106,9 +107,21 @@ namespace App_LernPlaner.ViewModels
             }
         }
 
+        private bool _isTaskDetailsOpen;
+        public bool IsTaskDetailsOpen
+        {
+            get => _isTaskDetailsOpen;
+            set
+            {
+                _isTaskDetailsOpen = value;
+                OnPropertyChanged(nameof(IsTaskDetailsOpen));
+            }
+        }
+
         public ICommand LoadDashboardCommand { get;  }
         public ICommand RefreshCommand { get; }
-        public ICommand OpenTasksCommand { get; }
+        public ICommand OpenTaskCommand { get; }
+        public ICommand CloseTaskDetailsCommand { get; }
 
 
 
@@ -119,7 +132,7 @@ namespace App_LernPlaner.ViewModels
             _currentUserId = 1; // Hier kommt user später bei Login
             Aufgaben = new ObservableCollection<Models.StudyTask>();
 
-           GrettingText = "Guten Morgen, Amine 👋";
+           GreettingText = "Guten Morgen, Amine 👋";
 
             CurrentDateText = DateTime.Now.ToString("ddd, dd. MMMM yyyy", new CultureInfo("de-DE"));
 
@@ -129,7 +142,8 @@ namespace App_LernPlaner.ViewModels
 
             LoadDashboardCommand = new Commands.AsyncRelayCommand(LoadDashboardAsync);
             RefreshCommand = new Commands.AsyncRelayCommand(LoadDashboardAsync);
-            OpenTasksCommand = new Commands.RelayCommand(OpenTask);
+            OpenTaskCommand = new Commands.RelayCommand(OpenTask);
+            CloseTaskDetailsCommand = new RelayCommand(CloseTaskDestails);
 
         }
 
@@ -159,17 +173,25 @@ namespace App_LernPlaner.ViewModels
 
         }
 
-         private void OpenTask()
+         private void OpenTask(object? parameter)
          {
-            if (SelectedTask == null)
+
+
+            if (parameter is not StudyTask task)
             {
-                MessageBox.Show("Bitte zuerst eine Aufgabe auswählen.");
+                MessageBox.Show("Keine Aufgabe gefunden.");
                 return;
             }
 
-            MessageBox.Show("Ausgewählte Aufgabe: " + SelectedTask.Titel);
-  
-         }
+            SelectedTask = task;
+            IsTaskDetailsOpen = true;
+
+        }
+
+        private void CloseTaskDestails()
+        {
+            IsTaskDetailsOpen = false;
+        }
  
 
         public event PropertyChangedEventHandler? PropertyChanged;

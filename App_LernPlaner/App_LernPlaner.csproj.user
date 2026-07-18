@@ -16,5 +16,8 @@
     </Compile>
     <Compile Update="Views\RegisterPage.xaml.cs">
     </Compile>
+    <Compile Update="Views\Tasks\TaskDetailView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 </Project>
