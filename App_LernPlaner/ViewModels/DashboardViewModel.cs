@@ -1,6 +1,7 @@
 ﻿using App_LernPlaner.Commands;
 using App_LernPlaner.Models;
 using App_LernPlaner.Services;
+using Microsoft.EntityFrameworkCore.Update.Internal;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -118,10 +119,87 @@ namespace App_LernPlaner.ViewModels
             }
         }
 
+        private bool _isEditingTaskProgress;
+        public bool IsEditingTaskProgress
+        {
+            get => _isEditingTaskProgress;
+            set
+            {
+                _isEditingTaskProgress = value;
+                OnPropertyChanged(nameof(IsEditingTaskProgress));
+                OnPropertyChanged(nameof(DetailViewVisibility));
+                OnPropertyChanged(nameof(EditViewVisibility));
+            }
+        }
+
+        private string _progressNotes = string.Empty;
+        public string ProgressNotes
+        {
+            get => _progressNotes;
+            set
+            {
+                _progressNotes = value;
+                OnPropertyChanged(nameof(ProgressNotes));
+            }
+        }
+
+        private string _ProgressAnswer = string.Empty;
+        public string ProgressAnswer
+        {
+            get => _ProgressAnswer;
+            set
+            {
+                _ProgressAnswer = value;
+                OnPropertyChanged(nameof(ProgressAnswer));
+            }
+        }
+
+        private int _learningMinutes;
+        public int LearningMinutes
+        {
+            get => _learningMinutes;
+            set
+            {
+                _learningMinutes = value;
+                OnPropertyChanged(nameof(LearningMinutes));
+            }
+        }
+
+        public Visibility DetailViewVisibility => 
+            IsEditingTaskProgress ? Visibility.Collapsed: Visibility.Visible;
+
+        public Visibility EditViewVisibility =>
+            IsEditingTaskProgress ? Visibility.Visible : Visibility.Collapsed;
+
+        private byte _progressStatus;
+        private byte ProgressStatus
+        {
+            get => _progressStatus;
+            set
+            {
+                _progressStatus = value;
+                OnPropertyChanged(nameof(ProgressStatus));
+
+                OnPropertyChanged(nameof(OffenButtonBackground));
+                OnPropertyChanged(nameof(InBearbeitungButtonBackground));
+                OnPropertyChanged(nameof(ErledigtButtonBackground));
+
+                OnPropertyChanged(nameof(OffenButtonBorder));
+                OnPropertyChanged(nameof(InBearbeitungButtonBorder));
+                OnPropertyChanged(nameof(ErledigtButtonBorder));
+            }
+        }
+
         public ICommand LoadDashboardCommand { get;  }
         public ICommand RefreshCommand { get; }
         public ICommand OpenTaskCommand { get; }
         public ICommand CloseTaskDetailsCommand { get; }
+
+        // Dieser Command für EditingTaskProgress
+        public ICommand EditTaskProgressCommand { get; }
+        public ICommand CancelEditTaskProgressCommand { get; }
+        public ICommand SaveTaskProgressCommand { get; }
+        public ICommand SetProgressStatusCommand { get; }
 
 
 
@@ -132,7 +210,7 @@ namespace App_LernPlaner.ViewModels
             _currentUserId = 1; // Hier kommt user später bei Login
             Aufgaben = new ObservableCollection<Models.StudyTask>();
 
-           GreettingText = "Guten Morgen, Amine 👋";
+            GreettingText = "Guten Morgen, Amine 👋";
 
             CurrentDateText = DateTime.Now.ToString("ddd, dd. MMMM yyyy", new CultureInfo("de-DE"));
 
@@ -144,6 +222,12 @@ namespace App_LernPlaner.ViewModels
             RefreshCommand = new Commands.AsyncRelayCommand(LoadDashboardAsync);
             OpenTaskCommand = new Commands.RelayCommand(OpenTask);
             CloseTaskDetailsCommand = new RelayCommand(CloseTaskDestails);
+
+            EditTaskProgressCommand = new RelayCommand(EditTaskProgress);
+            CancelEditTaskProgressCommand = new RelayCommand(CancelEditTaskProgress);
+            SaveTaskProgressCommand = new RelayCommand(SaveTaskProgress);
+
+            SetProgressStatusCommand = new RelayCommand(SetProgressStatus);
 
         }
 
@@ -191,8 +275,69 @@ namespace App_LernPlaner.ViewModels
         private void CloseTaskDestails()
         {
             IsTaskDetailsOpen = false;
+            IsEditingTaskProgress = false;
         }
- 
+
+
+        // <--  Für EditTask   -->
+        
+        private void EditTaskProgress(object? parameter)
+        {
+            if(SelectedTask == null)
+            {
+                return;
+            }
+
+
+            IsEditingTaskProgress = true;
+        }
+
+        private void CancelEditTaskProgress(object? parameter)
+        {
+            IsEditingTaskProgress = false;
+        }
+
+        private void SaveTaskProgress(object? parameter)
+        {
+            MessageBox.Show(
+                "Fortschritt gespeichert:\n\n" + 
+                "Notizen: " + ProgressNotes +"\n" +
+                "Antwort: " + ProgressAnswer + "\n" +
+                "Lernzeit: " + LearningMinutes + " Minuten"
+
+                );
+
+            IsEditingTaskProgress = false;
+        }
+
+        private void SetProgressStatus(object? parameter)
+        {
+            if (parameter == null)
+            {
+                return;
+            }
+
+            ProgressStatus = Convert.ToByte(parameter);
+        }
+
+        // <--  Für Farben  -->
+        public string OffenButtonBackground =>
+            ProgressStatus == 0 ? "#2563EB" : "#1F2937";
+
+        public string InBearbeitungButtonBackground =>
+            ProgressStatus == 1 ? "#2563EB" : "#1F2937";
+        public string ErledigtButtonBackground =>
+            ProgressStatus == 2 ? "#2563EB" : "#1F2937";
+
+        public string OffenButtonBorder =>
+            ProgressStatus == 0 ? "#2563EB" : "#334155";
+
+        public string InBearbeitungButtonBorder =>
+            ProgressStatus == 1 ? "#2563EB" : "#334155";
+
+        public string ErledigtButtonBorder =>
+            ProgressStatus == 2 ? "#2563EB" : "#334155";
+
 
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged(string propertyName)
