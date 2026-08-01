@@ -2,6 +2,7 @@
 using App_LernPlaner.Models;
 using App_LernPlaner.Services;
 using Microsoft.EntityFrameworkCore.Update.Internal;
+using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,8 +15,11 @@ namespace App_LernPlaner.ViewModels
 {
     public class DashboardViewModel : INotifyPropertyChanged
     {
+        private readonly SubmissionService _submissionService;
         private readonly Services.TaskService _taskService;
         private readonly int _currentUserId;
+
+
         public ObservableCollection<Models.StudyTask> Aufgaben { get; set; }
 
 
@@ -190,6 +194,17 @@ namespace App_LernPlaner.ViewModels
             }
         }
 
+        private string _submissionFilePath = string.Empty;
+        public string SubmissionFilePath
+        {
+            get => _submissionFilePath;
+            set
+            {
+                _submissionFilePath = value;
+                OnPropertyChanged(nameof(SubmissionFilePath));
+            }
+        }
+
         public ICommand LoadDashboardCommand { get;  }
         public ICommand RefreshCommand { get; }
         public ICommand OpenTaskCommand { get; }
@@ -201,11 +216,14 @@ namespace App_LernPlaner.ViewModels
         public ICommand SaveTaskProgressCommand { get; }
         public ICommand SetProgressStatusCommand { get; }
 
+        public ICommand ChooseSubmissionFileCommand { get; }
+        public ICommand MarkTaskAsDoneCommand { get; }
 
 
         public DashboardViewModel()
         {
             _taskService = new TaskService();
+            _submissionService = new SubmissionService();
 
             _currentUserId = 1; // Hier kommt user später bei Login
             Aufgaben = new ObservableCollection<Models.StudyTask>();
@@ -225,10 +243,13 @@ namespace App_LernPlaner.ViewModels
 
             EditTaskProgressCommand = new RelayCommand(EditTaskProgress);
             CancelEditTaskProgressCommand = new RelayCommand(CancelEditTaskProgress);
-            SaveTaskProgressCommand = new RelayCommand(SaveTaskProgress);
+            SaveTaskProgressCommand = new AsyncRelayCommand(SaveTaskProgressAsync);
 
             SetProgressStatusCommand = new RelayCommand(SetProgressStatus);
 
+            ChooseSubmissionFileCommand = new RelayCommand(ChooseSubmissionFile);
+            
+            MarkTaskAsDoneCommand = new AsyncRelayCommand(MarkTaskAsDoneAsync);
         }
 
         private async Task LoadDashboardAsync()
@@ -297,15 +318,30 @@ namespace App_LernPlaner.ViewModels
             IsEditingTaskProgress = false;
         }
 
-        private void SaveTaskProgress(object? parameter)
+        private async Task SaveTaskProgressAsync()
         {
-            MessageBox.Show(
-                "Fortschritt gespeichert:\n\n" + 
-                "Notizen: " + ProgressNotes +"\n" +
-                "Antwort: " + ProgressAnswer + "\n" +
-                "Lernzeit: " + LearningMinutes + " Minuten"
+            if(SelectedTask == null)
+            {
+                MessageBox.Show("Keine Aufgabe ausgewählt.");
+                return;
+            }
 
-                );
+            await _submissionService.SaveProgressAsync(
+                SelectedTask.TaskId,
+                _currentUserId,
+                ProgressStatus,
+                ProgressNotes,
+                ProgressAnswer,
+                LearningMinutes,
+                SubmissionFilePath);
+
+            await LoadDashboardAsync();
+
+            MessageBox.Show(
+            "Der Lernfortschritt wurde erfolgreich gespeichert. Ihre Abgabe wurde an den zuständigen Lehrer übermittelt.",
+            "Vorgang erfolgreich abgeschlossen",
+            MessageBoxButton.OK,
+            MessageBoxImage.Information);
 
             IsEditingTaskProgress = false;
         }
@@ -318,6 +354,55 @@ namespace App_LernPlaner.ViewModels
             }
 
             ProgressStatus = Convert.ToByte(parameter);
+        }
+
+        // Chose die Datei
+        private void ChooseSubmissionFile(object? parameter)
+        {
+            var dialog = new Microsoft.Win32.OpenFileDialog
+            {
+                Title = "Datei für Abgabe ausWählen",
+                Filter = "Alle Dateien (*.*)|*.*|PDF (*.pdf)|*.pdf|Word (*.docx)|*.docx|Bilder (*.png;*.jpg)|*.png;*.jpg"
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                SubmissionFilePath = dialog.FileName;
+            }
+        }
+
+        // => Markieren Als Erledigt
+        private async Task MarkTaskAsDoneAsync()
+        {
+            if(SelectedTask == null)
+            {
+                MessageBox.Show("Keine Aufgaben ausgewählt.");
+                return;
+            }
+
+            ProgressStatus = 2;
+
+            await _submissionService.SaveProgressAsync(
+                SelectedTask.TaskId,
+                _currentUserId,
+                ProgressStatus,
+                ProgressNotes,
+                ProgressAnswer,
+                LearningMinutes,
+                SubmissionFilePath);
+
+            IsTaskDetailsOpen = false;
+            IsEditingTaskProgress = false;
+
+            await LoadDashboardAsync();
+
+            MessageBox.Show(
+            "Die Aufgabe wurde erfolgreich als erledigt markiert und an den zuständigen Lehrer übermittelt.",
+            "Erfolgreich",
+            MessageBoxButton.OK,
+            MessageBoxImage.Information);
+
+
         }
 
         // <--  Für Farben  -->

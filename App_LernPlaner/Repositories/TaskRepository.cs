@@ -50,10 +50,23 @@ namespace App_LernPlaner.Repositories
             {
                 await conn.OpenAsync();
 
-                string query = @" SELECT TaskId, UserId, Title, Subject, Deadline, Priority, Status, IsRecurring, ClassId, CreatedBy
-                    FROM Tasks
-                    WHERE UserId = @userId
-                    ORDER BY Deadline ASC";
+                string query = @" SELECT 
+                                t.TaskId,
+                                t.UserId,
+                                t.Title,
+                                t.Subject,
+                                t.Deadline,
+                                t.Priority,
+                                COALESCE(s.Status, t.Status) AS Status,
+                                t.IsRecurring,
+                                t.ClassId,
+                                t.CreatedBy
+                            FROM Tasks t
+                            LEFT JOIN Submissions s
+                            ON s.TaskId = t.TaskId
+                            AND s.UserId = @userId
+                            WHERE t.UserId = @userId
+                            ORDER BY t.Deadline ASC";
                 using (MySqlCommand cmd = new MySqlCommand(query,conn))
                 {
                     cmd.Parameters.AddWithValue("UserId",UserId);
