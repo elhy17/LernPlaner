@@ -285,7 +285,7 @@ Background="#1E293B" BorderBrush="#334155" BorderThickness="1">
                     CornerRadius="10" Margin="0,0,10,0" Padding="16">
                     <StackPanel>
                         <TextBlock Text="Alle Aufgaben" Foreground="#64748B" FontSize="12"/>
-                        <TextBlock Text="12" Foreground="White" FontSize="28" FontWeight="Bold" Margin="0,4,0,0"/>
+                        <TextBlock Text="{Binding AlleAufgaben}" Foreground="White" FontSize="28" FontWeight="Bold" Margin="0,4,0,0"/>
                         <TextBlock Text="dieses Semester" Foreground="#64748B" FontSize="11"/>
                     </StackPanel>
                 </Border>
@@ -294,7 +294,7 @@ Background="#1E293B" BorderBrush="#334155" BorderThickness="1">
                     CornerRadius="10" Margin="0,0,10,0" Padding="16">
                     <StackPanel>
                         <TextBlock Text="Offen" Foreground="#64748B" FontSize="12"/>
-                        <TextBlock Text="4" Foreground="#F97316" FontSize="28" FontWeight="Bold" Margin="0,4,0,0"/>
+                        <TextBlock Text="{Binding OffeneAufgaben}" Foreground="#F97316" FontSize="28" FontWeight="Bold" Margin="0,4,0,0"/>
                         <TextBlock Text="2 diese Woche fällig" Foreground="#64748B" FontSize="11"/>
                     </StackPanel>
                 </Border>
@@ -303,7 +303,7 @@ Background="#1E293B" BorderBrush="#334155" BorderThickness="1">
                     CornerRadius="10" Margin="0,0,10,0" Padding="16">
                     <StackPanel>
                         <TextBlock Text="In Bearbeitung" Foreground="#64748B" FontSize="12"/>
-                        <TextBlock Text="3" Foreground="#3B82F6" FontSize="28" FontWeight="Bold" Margin="0,4,0,0"/>
+                        <TextBlock Text="{Binding InBearbeitung}" Foreground="#3B82F6" FontSize="28" FontWeight="Bold" Margin="0,4,0,0"/>
                         <TextBlock Text="aktiv" Foreground="#64748B" FontSize="11"/>
                     </StackPanel>
                 </Border>
@@ -312,7 +312,7 @@ Background="#1E293B" BorderBrush="#334155" BorderThickness="1">
                     CornerRadius="10" Padding="16">
                     <StackPanel>
                         <TextBlock Text="Erledigt" Foreground="#64748B" FontSize="12"/>
-                        <TextBlock Text="5" Foreground="#22C55E" FontSize="28" FontWeight="Bold" Margin="0,4,0,0"/>
+                        <TextBlock Text="{Binding Erledigt}" Foreground="#22C55E" FontSize="28" FontWeight="Bold" Margin="0,4,0,0"/>
                         <TextBlock Text="davon 4 pünktlich" Foreground="#64748B" FontSize="11"/>
                     </StackPanel>
                 </Border>
@@ -320,7 +320,7 @@ Background="#1E293B" BorderBrush="#334155" BorderThickness="1">
 
             <!-- AUFGABEN TABELLE -->
         <!-- AUFGABEN TABELLE -->
-        <Border Grid.Row="4"
+        <Border Grid.Row="3"
         Margin="20,0,20,0"
         Background="#1E293B"
         CornerRadius="12">
@@ -372,252 +372,128 @@ Background="#1E293B" BorderBrush="#334155" BorderThickness="1">
                         <TextBlock Grid.Column="2" Text="DEADLINE" Foreground="#64748B" FontSize="11" FontWeight="SemiBold"/>
                         <TextBlock Grid.Column="3" Text="PRIORITÄT" Foreground="#64748B" FontSize="11" FontWeight="SemiBold"/>
                         <TextBlock Grid.Column="4" Text="STATUS" Foreground="#64748B" FontSize="11" FontWeight="SemiBold"/>
+                        <TextBlock Grid.Column="5" Text="AKTION" Foreground="#64748B" FontSize="11" FontWeight="SemiBold"/>
                     </Grid>
 
                     <!-- Zeile: Mathe Hausaufgaben -->
-                    <Border Margin="10,2" Padding="10,12" CornerRadius="8">
-                        <Border.Style>
-                            <Style TargetType="Border">
-                                <Setter Property="Background" Value="Transparent"/>
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="#0F172A"/>
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="100"/>
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0">
-                                <TextBlock Text="Mathe Hausaufgaben" Foreground="White" FontWeight="SemiBold" FontSize="14"/>
-                                <TextBlock Text="von Herr Müller" Foreground="#64748B" FontSize="11" Margin="0,2,0,0"/>
-                            </StackPanel>
-                            <TextBlock Grid.Column="1" Text="Mathematik" Foreground="#94A3B8" VerticalAlignment="Center"/>
-                            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                                <TextBlock Text="⚠ " Foreground="#F87171" FontSize="12"/>
-                                <TextBlock Text="15.06.2026" Foreground="#F87171"/>
-                            </StackPanel>
-                            <Border Grid.Column="3" Background="#FCA5A5" CornerRadius="20"
-                            Padding="12,4" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                <TextBlock Text="Hoch" Foreground="#7F1D1D" FontSize="12" FontWeight="SemiBold"/>
-                            </Border>
-                            <Border Grid.Column="4" Background="#F97316" CornerRadius="20"
-                            Padding="12,4" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                <TextBlock Text="Offen" Foreground="White" FontSize="12" FontWeight="SemiBold"/>
-                            </Border>
-                            <Button Grid.Column="5" Content="Öffnen"
-                            Width="90" Height="34" Cursor="Hand"
-                            Background="Transparent" Foreground="White"
-                            BorderBrush="#475569" BorderThickness="1">
-                                <Button.Template>
-                                    <ControlTemplate TargetType="Button">
-                                        <Border x:Name="Bd" Background="{TemplateBinding Background}"
-                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                        BorderThickness="{TemplateBinding BorderThickness}"
-                                        CornerRadius="8">
-                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        </Border>
-                                        <ControlTemplate.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter TargetName="Bd" Property="Background" Value="#0EA5E9"/>
-                                                <Setter TargetName="Bd" Property="BorderBrush" Value="#0EA5E9"/>
-                                            </Trigger>
-                                        </ControlTemplate.Triggers>
-                                    </ControlTemplate>
-                                </Button.Template>
-                            </Button>
-                        </Grid>
-                    </Border>
+                    <ItemsControl ItemsSource="{Binding Aufgaben}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Margin="10,2" Padding="10,12" CornerRadius="8">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="#0F172A"/>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="100"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel Grid.Column="0">
+                                                                <TextBlock Text="{Binding Titel}"
+                                                Foreground="White"
+                                                FontWeight="SemiBold"
+                                                FontSize="14"/>
+
+                                                                <TextBlock Text="{Binding TaskId, StringFormat=Aufgabe #{0}}"
+                                                Foreground="#64748B"
+                                                FontSize="11"
+                                                Margin="0,2,0,0"/>
+                                                            </StackPanel>
+
+                                                            <TextBlock Grid.Column="1"
+                                            Text="{Binding Subject}"
+                                            Foreground="#94A3B8"
+                                            VerticalAlignment="Center"/>
+
+                                                            <TextBlock Grid.Column="2"
+                                            Text="{Binding Deadline, StringFormat={}{0:dd.MM.yyyy}}"
+                                            Foreground="#94A3B8"
+                                            VerticalAlignment="Center"/>
+
+                                                            <Border Grid.Column="3"
+                                        Background="#334155"
+                                        CornerRadius="20"
+                                        Padding="12,4"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center">
+
+                                                                <TextBlock Text="{Binding PriorityName}"
+                                                Foreground="White"
+                                                FontSize="12"
+                                                FontWeight="SemiBold"/>
+                                                            </Border>
+
+                                                            <Border Grid.Column="4"
+                                        x:Name="StatusBadge"
+                                        CornerRadius="20"
+                                        Padding="12,4"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center">
+
+                                                                <TextBlock Text="{Binding StatusName}"
+                                                Foreground="White"
+                                                FontSize="12"
+                                                FontWeight="SemiBold"/>
+                                                            </Border>
+
+                                                            <Button Grid.Column="5"
+                                        Content="Öffnen"
+                                        Width="90"
+                                        Height="34"
+                                        Cursor="Hand"
+                                        Background="Transparent"
+                                        Foreground="White"
+                                        BorderBrush="#475569"
+                                        BorderThickness="1"
+                                        Command="{Binding DataContext.OpenTaskCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                        CommandParameter="{Binding}"/>
+                                                        </Grid>
+                                                    </Border>
+
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding Status}" Value="0">
+                                        <Setter TargetName="StatusBadge" Property="Background" Value="#F97316"/>
+                                    </DataTrigger>
+
+                                    <DataTrigger Binding="{Binding Status}" Value="1">
+                                        <Setter TargetName="StatusBadge" Property="Background" Value="#2563EB"/>
+                                    </DataTrigger>
+
+                                    <DataTrigger Binding="{Binding Status}" Value="2">
+                                        <Setter TargetName="StatusBadge" Property="Background" Value="#16A34A"/>
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
 
                     <!-- Zeile: SQL Übungsblatt -->
-                    <Border Margin="10,2" Padding="10,12" CornerRadius="8">
-                        <Border.Style>
-                            <Style TargetType="Border">
-                                <Setter Property="Background" Value="Transparent"/>
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="#0F172A"/>
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="100"/>
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0">
-                                <TextBlock Text="SQL Übungsblatt" Foreground="White" FontWeight="SemiBold" FontSize="14"/>
-                                <TextBlock Text="von Frau Schmidt" Foreground="#64748B" FontSize="11" Margin="0,2,0,0"/>
-                            </StackPanel>
-                            <TextBlock Grid.Column="1" Text="Datenbanken" Foreground="#94A3B8" VerticalAlignment="Center"/>
-                            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                                <TextBlock Text="⚠ " Foreground="#F87171" FontSize="12"/>
-                                <TextBlock Text="18.06.2026" Foreground="#F87171"/>
-                            </StackPanel>
-                            <Border Grid.Column="3" Background="#FCA5A5" CornerRadius="20"
-                            Padding="12,4" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                <TextBlock Text="Hoch" Foreground="#7F1D1D" FontSize="12" FontWeight="SemiBold"/>
-                            </Border>
-                            <Border Grid.Column="4" Background="#F97316" CornerRadius="20"
-                            Padding="12,4" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                <TextBlock Text="Offen" Foreground="White" FontSize="12" FontWeight="SemiBold"/>
-                            </Border>
-                            <Button Grid.Column="5" Content="Öffnen"
-                            Width="90" Height="34" Cursor="Hand"
-                            Background="Transparent" Foreground="White"
-                            BorderBrush="#475569" BorderThickness="1">
-                                <Button.Template>
-                                    <ControlTemplate TargetType="Button">
-                                        <Border x:Name="Bd" Background="{TemplateBinding Background}"
-                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                        BorderThickness="{TemplateBinding BorderThickness}"
-                                        CornerRadius="8">
-                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        </Border>
-                                        <ControlTemplate.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter TargetName="Bd" Property="Background" Value="#0EA5E9"/>
-                                                <Setter TargetName="Bd" Property="BorderBrush" Value="#0EA5E9"/>
-                                            </Trigger>
-                                        </ControlTemplate.Triggers>
-                                    </ControlTemplate>
-                                </Button.Template>
-                            </Button>
-                        </Grid>
-                    </Border>
+                    
 
                     <!-- AKTUELL -->
                     <TextBlock Text="AKTUELL" Foreground="#64748B"
                        FontSize="11" FontWeight="SemiBold" Margin="20,16,0,8"/>
 
-                    <!-- Zeile: C# Projekt -->
-                    <Border Margin="10,2" Padding="10,12" CornerRadius="8">
-                        <Border.Style>
-                            <Style TargetType="Border">
-                                <Setter Property="Background" Value="Transparent"/>
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="#0F172A"/>
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="100"/>
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0">
-                                <TextBlock Text="C# Projekt fertigstellen" Foreground="White" FontWeight="SemiBold" FontSize="14"/>
-                                <TextBlock Text="von Herr Müller" Foreground="#64748B" FontSize="11" Margin="0,2,0,0"/>
-                            </StackPanel>
-                            <TextBlock Grid.Column="1" Text="Programmierung" Foreground="#94A3B8" VerticalAlignment="Center"/>
-                            <TextBlock Grid.Column="2" Text="20.06.2026" Foreground="#94A3B8" VerticalAlignment="Center"/>
-                            <Border Grid.Column="3" Background="#FDE68A" CornerRadius="20"
-                            Padding="12,4" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                <TextBlock Text="Mittel" Foreground="#78350F" FontSize="12" FontWeight="SemiBold"/>
-                            </Border>
-                            <Border Grid.Column="4" Background="#2563EB" CornerRadius="20"
-                            Padding="12,4" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                <TextBlock Text="In Bearbeitung" Foreground="White" FontSize="12" FontWeight="SemiBold"/>
-                            </Border>
-                            <Button Grid.Column="5" Content="Öffnen"
-                            Width="90" Height="34" Cursor="Hand"
-                            Background="Transparent" Foreground="White"
-                            BorderBrush="#475569" BorderThickness="1">
-                                <Button.Template>
-                                    <ControlTemplate TargetType="Button">
-                                        <Border x:Name="Bd" Background="{TemplateBinding Background}"
-                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                        BorderThickness="{TemplateBinding BorderThickness}"
-                                        CornerRadius="8">
-                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        </Border>
-                                        <ControlTemplate.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter TargetName="Bd" Property="Background" Value="#0EA5E9"/>
-                                                <Setter TargetName="Bd" Property="BorderBrush" Value="#0EA5E9"/>
-                                            </Trigger>
-                                        </ControlTemplate.Triggers>
-                                    </ControlTemplate>
-                                </Button.Template>
-                            </Button>
-                        </Grid>
-                    </Border>
+                   
 
                     <!-- ERLEDIGT -->
                     <TextBlock Text="ERLEDIGT" Foreground="#64748B"
                        FontSize="11" FontWeight="SemiBold" Margin="20,16,0,8"/>
 
-                    <!-- Zeile: Englisch Vokabeln -->
-                    <Border Margin="10,2,10,10" Padding="10,12" CornerRadius="8" Opacity="0.6">
-                        <Border.Style>
-                            <Style TargetType="Border">
-                                <Setter Property="Background" Value="Transparent"/>
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="#0F172A"/>
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="100"/>
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0">
-                                <TextBlock Text="Englisch Vokabeln lernen" Foreground="White" FontWeight="SemiBold" FontSize="14"/>
-                                <TextBlock Text="von Frau Koch" Foreground="#64748B" FontSize="11" Margin="0,2,0,0"/>
-                            </StackPanel>
-                            <TextBlock Grid.Column="1" Text="Englisch" Foreground="#94A3B8" VerticalAlignment="Center"/>
-                            <TextBlock Grid.Column="2" Text="12.06.2026" Foreground="#94A3B8" VerticalAlignment="Center"/>
-                            <Border Grid.Column="3" Background="#BBF7D0" CornerRadius="20"
-                            Padding="12,4" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                <TextBlock Text="Niedrig" Foreground="#14532D" FontSize="12" FontWeight="SemiBold"/>
-                            </Border>
-                            <Border Grid.Column="4" Background="#16A34A" CornerRadius="20"
-                            Padding="12,4" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                <TextBlock Text="Erledigt" Foreground="White" FontSize="12" FontWeight="SemiBold"/>
-                            </Border>
-                            <Button Grid.Column="5" Content="Details"
-                            Width="90" Height="34" Cursor="Hand"
-                            Background="#334155" Foreground="White" BorderThickness="0">
-                                <Button.Template>
-                                    <ControlTemplate TargetType="Button">
-                                        <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="8">
-                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        </Border>
-                                        <ControlTemplate.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter TargetName="Bd" Property="Background" Value="#475569"/>
-                                            </Trigger>
-                                        </ControlTemplate.Triggers>
-                                    </ControlTemplate>
-                                </Button.Template>
-                            </Button>
-                        </Grid>
-                    </Border>
+                   
 
                 </StackPanel>
             </ScrollViewer>

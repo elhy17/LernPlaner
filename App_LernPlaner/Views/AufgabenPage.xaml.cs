@@ -23,7 +23,18 @@ namespace App_LernPlaner.Views
         public AufgabenPage()
         {
             InitializeComponent();
-            DataContext = new ViewModels.AufgabenViewModel();
+            var viewModel = new ViewModels.AufgabenViewModel();
+            this.DataContext = viewModel;
+
+            Loaded += (_, _) =>
+            {
+                if (viewModel.LoadAufgabenCommand.CanExecute(null))
+                {
+                    viewModel.LoadAufgabenCommand.Execute(null);
+                }
+            };
+
         }
+    
     }
 }
