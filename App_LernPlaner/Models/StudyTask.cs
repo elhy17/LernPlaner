@@ -18,6 +18,7 @@ namespace App_LernPlaner.Models
         public DateTime Deadline { get; set; }
         public byte Priority { get; set; } // Wenn 1= Niedrig, 2= Mittel, 3 = Hoch
         public byte Status { get; set; } // 0 = Offen, 1 = In Bearbeitung, 2 = Erledigt
+        public string Description { get; set; } = string.Empty;
         public bool IsRecurring { get; set; }
 
         public string PriorityName => Priority switch

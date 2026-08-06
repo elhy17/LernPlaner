@@ -113,15 +113,27 @@
                              Padding="12"
                              VerticalContentAlignment="Center"/>
 
-                    <DatePicker Grid.Row="3" 
-                                Grid.Column="2"
-                                SelectedDate="{Binding NewTaskDeadline}"
-                                Background="#0B1120"
-                                Foreground="White"
-                                BorderBrush="#334155"
-                                BorderThickness="1"
-                                FontSize="15"
-                                />
+                    <DatePicker
+                        Grid.Row="3"
+                        Grid.Column="2"
+                        SelectedDate="{Binding NewTaskDeadline}"
+                        Foreground="White"
+                        Height="35"
+                        Width="280"
+                        BorderBrush="#334155"
+                        BorderThickness="1"
+                        FontSize="14"
+                        VerticalContentAlignment="Center">
+
+                        <DatePicker.Resources>
+                            <Style TargetType="DatePickerTextBox">
+                                <Setter Property="Background" Value="#0B1120"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="BorderBrush" Value="#334155"/>
+                            </Style>
+                        </DatePicker.Resources>
+
+                    </DatePicker>
                     <TextBlock Grid.Row="4"
                                Grid.Column="0"
                                Text="Priorität"
@@ -137,17 +149,102 @@
                                FontWeight="SemiBold"/>
 
                     <ComboBox Grid.Row="5"
-                              Grid.Column="0"
-                              SelectedIndex="{Binding NewTaskPriorityIndex}"
-                              Background="#0B1120"
-                              Foreground="White"
-                              BorderBrush="#334155"
-                              BorderThickness="1"
-                              FontSize="15"
-                              Padding="8">
+          Grid.Column="0"
+          Height="35"
+          SelectedIndex="{Binding NewTaskPriorityIndex, Mode=TwoWay}"
+          Foreground="White"
+          Background="#0B1120"
+          BorderBrush="#334155"
+          BorderThickness="1"
+          FontSize="15">
+
+                        <ComboBox.Resources>
+
+                            <Style TargetType="{x:Type ComboBoxItem}">
+                                <Setter Property="Background" Value="#0B1120"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="Padding" Value="10,6"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+
+                                <Style.Triggers>
+                                    <Trigger Property="IsHighlighted" Value="True">
+                                        <Setter Property="Background" Value="#2563EB"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                    </Trigger>
+
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="#1D4ED8"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+
+                        </ComboBox.Resources>
+
+                        <ComboBox.Template>
+                            <ControlTemplate TargetType="{x:Type ComboBox}">
+                                <Grid>
+                                    <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="2">
+
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="35"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <ContentPresenter Grid.Column="0"
+                                          Margin="10,0,5,0"
+                                          VerticalAlignment="Center"
+                                          Content="{TemplateBinding SelectionBoxItem}"
+                                          ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                          ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}"/>
+
+                                            <ToggleButton Grid.Column="1"
+                                      Focusable="False"
+                                      IsChecked="{Binding IsDropDownOpen,
+                                          RelativeSource={RelativeSource TemplatedParent},
+                                          Mode=TwoWay}"
+                                      Background="#0B1120"
+                                      BorderThickness="0">
+
+                                                <Path Width="10"
+                                  Height="6"
+                                  Fill="White"
+                                  Stretch="Fill"
+                                  Data="M 0 0 L 5 5 L 10 0 Z"/>
+                                            </ToggleButton>
+                                        </Grid>
+                                    </Border>
+
+                                    <Popup Name="PART_Popup"
+                       Placement="Bottom"
+                       IsOpen="{TemplateBinding IsDropDownOpen}"
+                       AllowsTransparency="True"
+                       Focusable="False"
+                       PopupAnimation="Fade">
+
+                                        <Border Background="#0B1120"
+                            BorderBrush="#334155"
+                            BorderThickness="1"
+                            MinWidth="{Binding ActualWidth,
+                                RelativeSource={RelativeSource TemplatedParent}}">
+
+                                            <ScrollViewer>
+                                                <ItemsPresenter/>
+                                            </ScrollViewer>
+                                        </Border>
+                                    </Popup>
+                                </Grid>
+                            </ControlTemplate>
+                        </ComboBox.Template>
+
                         <ComboBoxItem Content="Niedrig"/>
                         <ComboBoxItem Content="Mittel"/>
                         <ComboBoxItem Content="Hoch"/>
+
                     </ComboBox>
 
                     <CheckBox Grid.Row="5" 
@@ -156,6 +253,7 @@
                               IsChecked="{Binding NewTaskIsRecurring}"
                               Foreground="#CBD5E1"
                               FontSize="14"
+                              Margin="20,0,0,0"
                               VerticalAlignment="Center"/>
 
                     <TextBlock Grid.Row="6" 

@@ -98,18 +98,18 @@ namespace App_LernPlaner.Repositories
                 await conn.OpenAsync();
 
                 var query = @"INSERT INTO Tasks
-                        (UserId, Title, Subject, Deadline, Priority, Status, IsRecurring, ClassId, CreatedBy)
+                        (UserId, Title, Subject, Description, Deadline, Priority, Status, IsRecurring, ClassId, CreatedBy)
                     VALUES
-                        (@userId, @title, @sub, @dead, @prio, @status, @isRecu, @classId, @createdBy)";
+                        (@userId, @title, @sub, @desc, @dead, @prio, @status, @isRecu, @classId, @createdBy)";
 
                 using(MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
-                    cmd.Parameters.AddWithValue("@taskId", task.TaskId);
                     cmd.Parameters.AddWithValue("@userId", task.UserId);
                     cmd.Parameters.AddWithValue("@title", task.Titel);
                     cmd.Parameters.AddWithValue("@sub", task.Subject);
-                    cmd.Parameters.AddWithValue("@Dead", task.Deadline);
-                    cmd.Parameters.AddWithValue("@Prio", task.Priority);
+                    cmd.Parameters.AddWithValue("@desc", task.Description);
+                    cmd.Parameters.AddWithValue("@dead", task.Deadline);
+                    cmd.Parameters.AddWithValue("@prio", task.Priority);
                     cmd.Parameters.AddWithValue("@status", task.Status);
                     cmd.Parameters.AddWithValue("@isRecu", task.IsRecurring);
                     cmd.Parameters.AddWithValue("@classId", task.ClassId);
@@ -117,9 +117,6 @@ namespace App_LernPlaner.Repositories
 
                     await cmd.ExecuteNonQueryAsync();
                 }
-
-              
-
 
             }
         }

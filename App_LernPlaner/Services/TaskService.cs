@@ -20,6 +20,12 @@ namespace App_LernPlaner.Services
         {
             _taskRepository = new Repositories.TaskRepository();
         }
+
+        public async Task AddTaskAsync(Models.StudyTask task)
+        {
+            await _taskRepository.HinzufugenTask(task);
+        }
+
         public async Task<List<Models.StudyTask>> GetTasksAsync()
         {
             return await _taskRepository.GetAllTasks();
