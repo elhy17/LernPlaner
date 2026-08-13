@@ -306,7 +306,7 @@
                         
                         <!-- Status -->
                         <TextBlock Grid.Column="0" Grid.Row="0"
-                                   Text="Status" VerticalAlignment="Center"
+                                   Text="Status *" VerticalAlignment="Center"
                                    Foreground="#CBD5E1" FontSize="15"/>
 
                         <Grid Grid.Row="0" Grid.Column="1"
@@ -369,7 +369,7 @@
                          <!-- Antwort -->
 
                         <TextBlock Grid.Row="4" Grid.Column="0" 
-                                   Text="Abgabe / Antwort"
+                                   Text="Abgabe / Antwort *"
                                    Foreground="#CBD5E1"
                                    FontSize="15"
                                    VerticalAlignment="Top"
@@ -391,7 +391,7 @@
                         
                         <!-- Lernzeit -->
                         <TextBlock Grid.Row="6" Grid.Column="0"
-                                   Text="Lernzeit"
+                                   Text="Lernzeit *"
                                    Foreground="#CBD5E1"
                                    FontSize="15"
                                    VerticalAlignment="Center"/>

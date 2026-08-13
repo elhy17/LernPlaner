@@ -72,9 +72,9 @@
                     <TextBlock 
                         Grid.Row="0"
                         Grid.ColumnSpan="3"
-                        Text="Titel"
+                        Text="Titel *"
                         Foreground="#CBD5E1"
-                        FontSize="14"
+                        FontSize="15"
                         FontWeight="SemiBold"/>
 
                     <TextBox Grid.Row="1"
@@ -90,16 +90,16 @@
 
                     <TextBlock Grid.Row="2"
                                Grid.Column="0"
-                               Text="Fach"
+                               Text="Fach *"
                                Foreground="#CBD5E1"
-                               FontSize="14"
+                               FontSize="15"
                                FontWeight="SemiBold"/>
 
                     <TextBlock Grid.Row="2"
                                Grid.Column="2"
-                               Text="Deadline"
+                               Text="Deadline *"
                                Foreground="#CBD5E1"
-                               FontSize="14"
+                               FontSize="15"
                                FontWeight="SemiBold"/>
 
                     <TextBox Grid.Row="3" 

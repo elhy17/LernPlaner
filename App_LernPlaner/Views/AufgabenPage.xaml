@@ -177,8 +177,11 @@
                     </StackPanel>
                 </Border>
 
-            <Button Grid.Column="1" Margin="0,0,8,0" Cursor="Hand"
-Background="#1E293B" BorderBrush="#334155" BorderThickness="1">
+            <Button Grid.Column="1"
+                    Margin="0,0,8,0" Cursor="Hand"
+                    Background="{Binding AllFilterBackground}" BorderBrush="#334155" 
+                    Command="{Binding FilterAllCommand}"
+                    BorderThickness="1">
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
                         <Border x:Name="Bd" Background="{TemplateBinding Background}"
@@ -199,7 +202,8 @@ Background="#1E293B" BorderBrush="#334155" BorderThickness="1">
 
             <!-- Filter: Offen -->
             <Button Grid.Column="2" Margin="0,0,8,0" Cursor="Hand"
-        Background="#1E293B" BorderBrush="#334155" BorderThickness="1">
+        Background="{Binding OpenFilterBackground}" BorderBrush="#334155" BorderThickness="1"
+        Command="{Binding FilterOpenCommand}">
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
                         <Border x:Name="Bd" Background="{TemplateBinding Background}"
@@ -220,7 +224,8 @@ Background="#1E293B" BorderBrush="#334155" BorderThickness="1">
 
             <!-- Filter: In Bearbeitung -->
             <Button Grid.Column="3" Margin="0,0,8,0" Cursor="Hand"
-        Background="#1E293B" BorderBrush="#334155" BorderThickness="1">
+        Background="{Binding InProgressFilterBackground}" BorderBrush="#334155" BorderThickness="1"
+        Command="{Binding FilterInProgressCommand}">
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
                         <Border x:Name="Bd" Background="{TemplateBinding Background}"
@@ -241,7 +246,8 @@ Background="#1E293B" BorderBrush="#334155" BorderThickness="1">
 
             <!-- Filter: Erledigt -->
             <Button Grid.Column="4" Margin="0,0,8,0" Cursor="Hand"
-        Background="#1E293B" BorderBrush="#334155" BorderThickness="1">
+        Background="{Binding DoneFilterBackground}" BorderBrush="#334155" BorderThickness="1"
+        Command="{Binding FilterDoneCommand}">
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
                         <Border x:Name="Bd" Background="{TemplateBinding Background}"
@@ -262,7 +268,8 @@ Background="#1E293B" BorderBrush="#334155" BorderThickness="1">
 
             <!-- Filter: Deadline -->
             <Button Grid.Column="5" Cursor="Hand"
-        Background="#1E293B" BorderBrush="#334155" BorderThickness="1">
+        Background="{Binding DeadlineFilterBackground}" BorderBrush="#334155" BorderThickness="1"
+        Command="{Binding ToggleDeadlineFilterCommand}">
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
                         <Border x:Name="Bd" Background="{TemplateBinding Background}"
@@ -498,17 +505,6 @@ Background="#1E293B" BorderBrush="#334155" BorderThickness="1">
                     </ItemsControl>
 
                     <!-- Zeile: SQL Übungsblatt -->
-                    
-
-                    <!-- AKTUELL -->
-                    <TextBlock Text="AKTUELL" Foreground="#64748B"
-                       FontSize="11" FontWeight="SemiBold" Margin="20,16,0,8"/>
-
-                   
-
-                    <!-- ERLEDIGT -->
-                    <TextBlock Text="ERLEDIGT" Foreground="#64748B"
-                       FontSize="11" FontWeight="SemiBold" Margin="20,16,0,8"/>
 
                    
 
@@ -520,6 +516,11 @@ Background="#1E293B" BorderBrush="#334155" BorderThickness="1">
     Grid.RowSpan="4"
     Panel.ZIndex="30"
     Visibility="{Binding IsAddTaskOpen, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+        <taskViews:TaskDetailView
+    Grid.RowSpan="4"
+    Panel.ZIndex="40"
+    Visibility="{Binding IsTaskDetailsOpen, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
     </Grid>
     </Page>

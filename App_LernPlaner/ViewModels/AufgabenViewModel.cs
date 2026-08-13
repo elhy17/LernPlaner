@@ -19,6 +19,8 @@ namespace App_LernPlaner.ViewModels
     {
         private readonly TaskService _taskService;
         private readonly int _UserId;
+        private byte? _selectedStatusFilter = null;
+        private bool _deadlineonly = false;
         public ObservableCollection<StudyTask> Aufgaben { get; set; }
 
         private List<StudyTask> _allTasks = new();
@@ -171,15 +173,50 @@ namespace App_LernPlaner.ViewModels
                 }
             }
         }
+
+        private StudyTask? _selectedTask;
+        public StudyTask? SelectedTask
+        {
+            get => _selectedTask;
+            set
+            {
+                if (_selectedTask != value)
+                {
+                    _selectedTask = value;
+                    OnPropertyChanged(nameof(SelectedTask));
+                }
+            }
+        }
+
+        private bool _isTaskDetailsOpen;
+        public bool IsTaskDetailsOpen
+        {
+            get => _isTaskDetailsOpen;
+            set
+            {
+                if (_isTaskDetailsOpen != value)
+                {
+                    _isTaskDetailsOpen = value;
+                    OnPropertyChanged(nameof(IsTaskDetailsOpen));
+                }
+            }
+        }
         public byte NewTaskPriority => (byte)(NewTaskPriorityIndex + 1);
 
         public ICommand LoadAufgabenCommand { get; }
         public ICommand OpenTaskCommand { get; }
         public ICommand AddTaskCommand { get; }
-
         public ICommand CancelNewTaskCommand { get; }
-
         public ICommand SaveNewTaskCommand { get; }
+
+        public ICommand FilterAllCommand { get; }
+        public ICommand FilterOpenCommand { get; }
+        public ICommand FilterInProgressCommand { get; }
+        public ICommand FilterDoneCommand { get; }
+        public ICommand ToggleDeadlineFilterCommand { get; }
+
+
+        public ICommand CloseTaskDetailsCommand { get; }
 
         public AufgabenViewModel()
         {
@@ -194,13 +231,48 @@ namespace App_LernPlaner.ViewModels
 
             CancelNewTaskCommand = new RelayCommand(CancelNewTask);
             SaveNewTaskCommand = new AsyncRelayCommand(SaveNewTaskAsync);
+
+            FilterAllCommand = new RelayCommand(_ => SetStatusFilter(null));
+            FilterOpenCommand = new RelayCommand(_ => SetStatusFilter(0));
+            FilterInProgressCommand = new RelayCommand(_ => SetStatusFilter(1));
+            FilterDoneCommand = new RelayCommand(_ => SetStatusFilter(2));
+            ToggleDeadlineFilterCommand = new RelayCommand(_ => ToggleDeadlineFilter());
+        }
+
+        private void SetStatusFilter(byte? status)
+        {
+            _selectedStatusFilter = status;
+            ApplyFilter();
+
+            OnPropertyChanged(nameof(AllFilterBackground));
+            OnPropertyChanged(nameof(OpenFilterBackground));
+            OnPropertyChanged(nameof(InProgressFilterBackground));
+            OnPropertyChanged(nameof(DoneFilterBackground));
+        }
+
+        private void ToggleDeadlineFilter()
+        {
+            _deadlineonly = !_deadlineonly;
+            ApplyFilter();
+
+            OnPropertyChanged(nameof(DeadlineFilterBackground));
         }
 
         private void ApplyFilter()
         {
-            Aufgaben.Clear();
+            Aufgaben.Clear(); 
 
             var filteredTasks = _allTasks.AsEnumerable();
+
+            if (_selectedStatusFilter.HasValue)
+            {
+                filteredTasks = filteredTasks.Where(task => task.Status == _selectedStatusFilter.Value);
+            }
+
+            if (_deadlineonly)
+            {
+                filteredTasks = filteredTasks.Where(task => task.Status != 2 && task.Deadline.Date >= DateTime.Today && task.Deadline.Date <= DateTime.Today.AddDays(7));
+            }
 
             if (!string.IsNullOrWhiteSpace(SearchText))
             {
@@ -217,6 +289,8 @@ namespace App_LernPlaner.ViewModels
             }
 
             RefreshStats();
+
+          
         }
 
 
@@ -282,7 +356,13 @@ namespace App_LernPlaner.ViewModels
 
         private void OpenTask(object? parameter)
         {
-
+            if(parameter is not StudyTask task)
+            {
+                MessageBox.Show("Keine Aufgabe ausgewählt");
+                return;
+            }
+            SelectedTask = task;
+            IsTaskDetailsOpen = true;
         }
 
         private void AddTask(object? parameter)
@@ -295,7 +375,12 @@ namespace App_LernPlaner.ViewModels
             IsAddTaskOpen = false;
         }
 
+        private void CloseTAskDeatils()
+        {
+            IsTaskDetailsOpen = false;
+        }
 
+        // Farben
         public string OffenButtonBackground =>
            ProgressStatus == 0 ? "#2563EB" : "#1F2937";
 
@@ -314,6 +399,22 @@ namespace App_LernPlaner.ViewModels
             ProgressStatus == 2 ? "#2563EB" : "#334155";
 
 
+
+        // Farben für Aktive Filter
+        public string AllFilterBackground =>
+            _selectedStatusFilter == null ? "#2563EB" : "#1E293B";
+
+        public string OpenFilterBackground =>
+            _selectedStatusFilter == 0 ? "#2563EB" : "#1E293B";
+
+        public string InProgressFilterBackground =>
+            _selectedStatusFilter == 1 ? "#2563EB" : "#1E293B";
+
+        public string DoneFilterBackground =>
+            _selectedStatusFilter == 2 ? "#2563EB" : "#1E293B";
+
+        public string DeadlineFilterBackground =>
+            _deadlineonly ? "#2563EB" : "#1E293B";
         public string ProgressStatusText => ProgressStatus switch
         {
                 0 => "Offen",

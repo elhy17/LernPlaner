@@ -3,6 +3,7 @@ using App_LernPlaner.Models;
 using App_LernPlaner.Services;
 using Microsoft.EntityFrameworkCore.Update.Internal;
 using Microsoft.Identity.Client;
+using Mysqlx.Prepare;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -326,6 +327,28 @@ namespace App_LernPlaner.ViewModels
                 return;
             }
 
+            var errors = new List<string>();
+
+            if (string.IsNullOrWhiteSpace(ProgressAnswer))
+            {
+                errors.Add("Abgabe / Antwort fehlt.");
+            }
+
+            if (LearningMinutes <= 0)
+            {
+                errors.Add("Lernzeit muss größer als 0 sein.");
+            }
+
+            if (errors.Any())
+            {
+                MessageBox.Show(
+                    "Bitte prüfen Sie Ihre Eingaben:\n\n" + string.Join("\n", errors),
+                    "Eingaben unvollständig",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+
+                return;
+            }
             await _submissionService.SaveProgressAsync(
                 SelectedTask.TaskId,
                 _currentUserId,

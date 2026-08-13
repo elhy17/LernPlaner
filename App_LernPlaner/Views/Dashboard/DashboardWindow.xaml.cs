@@ -25,6 +25,9 @@ namespace App_LernPlaner.Views.Dashboard
             
         }
 
-       
+        private void Aufgaben_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new App_LernPlaner.Views.ProfilePage());
+        }
     }
 }
