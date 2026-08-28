@@ -64,6 +64,9 @@ namespace App_LernPlaner.ViewModels
             EditProfileCommand = new RelayCommand(EditProfile);
             ChangePasswordCommand = new RelayCommand(ChangePassword);
             LogoutCommand = new RelayCommand(Logout);
+
+            CancelEditProfileCommand = new RelayCommand(CancelEditProfile);
+            SaveProfileCommand = new RelayCommand(SaveProfile);
         }
 
         private async Task LoadProfileAsync()
@@ -106,6 +109,11 @@ namespace App_LernPlaner.ViewModels
             OnPropertyChanged(nameof(EditEmail));
 
             IsEditProfileOpen = true;
+        }
+
+        private void CancelEditProfile(object? parameter)
+        {
+            IsEditProfileOpen = false;
         }
 
         private void ChangePassword(object? parameter)
