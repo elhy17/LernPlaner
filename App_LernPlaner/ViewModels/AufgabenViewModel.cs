@@ -222,7 +222,7 @@ namespace App_LernPlaner.ViewModels
         {
             _taskService = new TaskService();
 
-            _UserId = 1; // Kommt später
+            _UserId = Services.sessionManager.CurrentUserId;
             Aufgaben = new ObservableCollection<StudyTask>();
 
             LoadAufgabenCommand = new AsyncRelayCommand(LoadAufgabeAsync);

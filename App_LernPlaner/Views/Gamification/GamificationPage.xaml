@@ -1,0 +1,71 @@
+<Page x:Class="App_LernPlaner.Views.Gamification.GamificationPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Background="#0B1120">
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Gamification" Foreground="White" FontSize="22" FontWeight="Bold" Margin="0,0,0,16"/>
+
+        <Border Grid.Row="1" Background="#1E293B" CornerRadius="10" Padding="18" Margin="0,0,0,16">
+            <StackPanel>
+                <TextBlock x:Name="LblXp" Foreground="White" FontSize="30" FontWeight="Bold"/>
+                <TextBlock x:Name="LblLevel" Foreground="#94A3B8" FontSize="13" Margin="0,4,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <TextBlock Grid.Row="2" Text="Meine Badges" Foreground="White" FontWeight="SemiBold" Margin="0,0,0,10"/>
+
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+
+            <ItemsControl x:Name="BadgesList" Grid.Column="0" Margin="0,0,10,0">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="#1E293B" CornerRadius="10" Padding="12" Margin="0,0,0,8">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Badge.IconPath}" FontSize="22" VerticalAlignment="Center"/>
+                                <StackPanel Margin="10,0,0,0">
+                                    <TextBlock Text="{Binding Badge.Name}" Foreground="White" FontWeight="SemiBold"/>
+                                    <TextBlock Text="{Binding Badge.Description}" Foreground="#64748B" FontSize="11" TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <StackPanel Grid.Column="1">
+                <TextBlock Text="Rangliste (Klasse)" Foreground="White" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                <ComboBox x:Name="CmbClass" DisplayMemberPath="Name" Margin="0,0,0,10" Background="White" Foreground="Black"
+                          SelectionChanged="CmbClass_SelectionChanged"/>
+                <ItemsControl x:Name="LeaderboardList">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="#1E293B" CornerRadius="8" Padding="10" Margin="0,0,0,6">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding Rank}" Foreground="#0EA5E9" FontWeight="Bold" Width="24"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding UserName}" Foreground="White"/>
+                                    <TextBlock Grid.Column="2" Text="{Binding Xp}" Foreground="#94A3B8"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Page>

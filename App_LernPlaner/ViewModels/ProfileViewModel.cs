@@ -1,11 +1,6 @@
-﻿using App_LernPlaner.Commands;
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
+using App_LernPlaner.Commands;
+using App_LernPlaner.Services;
 using System.ComponentModel;
-using System.IO.Packaging;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -13,26 +8,27 @@ using System.Windows.Input;
 namespace App_LernPlaner.ViewModels
 {
     public class ProfileViewModel : INotifyPropertyChanged
-       {
+    {
+        private readonly Repositories.UserRepository _users = new();
 
-        public string Initials { get; set; } = "MS";
-        public string FullName { get; set; } = "Max Schmidt";
-        public string RoleAndClass { get; set; } = "Schüler - Klasse 10A";
+        public string Initials { get; set; } = "?";
+        public string FullName { get; set; } = string.Empty;
+        public string RoleAndClass { get; set; } = string.Empty;
 
-        public string LevelText { get; set; } = "Level 3";
-        public string XpText { get; set; } = "XP 680";
-        public string RankText { get; set; } = "Rang 3";
+        public string LevelText { get; set; } = string.Empty;
+        public string XpText { get; set; } = string.Empty;
+        public string RankText { get; set; } = string.Empty;
 
-        public string FirstName { get; set; } = "Max";
-        public string LastName { get; set; } = "Schmidt";
-        public string UserName { get; set; } = "max.Schmidt";
-        public string Email { get; set; } = "Max.Schmidt@schule.de";
-        public string Role { get; set; } = "Schüler";
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+        public string UserName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Role { get; set; } = string.Empty;
 
-        public int OpenTasks { get; set; } = 5;
-        public int FinishedTasks { get; set; } = 18;
-        public string AverageGrade { get; set; } = "2,3";
-        public int TotalXp { get; set; } = 680;
+        public int OpenTasks { get; set; }
+        public int FinishedTasks { get; set; }
+        public string AverageGrade { get; set; } = "-";
+        public int TotalXp { get; set; }
 
         public string EditFirstName { get; set; } = string.Empty;
         public string EditLastName { get; set; } = string.Empty;
@@ -59,6 +55,7 @@ namespace App_LernPlaner.ViewModels
 
         public ICommand SaveProfileCommand { get; }
         public ICommand CancelEditProfileCommand { get; }
+
         public ProfileViewModel()
         {
             EditProfileCommand = new RelayCommand(EditProfile);
@@ -66,38 +63,87 @@ namespace App_LernPlaner.ViewModels
             LogoutCommand = new RelayCommand(Logout);
 
             CancelEditProfileCommand = new RelayCommand(CancelEditProfile);
-            SaveProfileCommand = new RelayCommand(SaveProfile);
+            SaveProfileCommand = new AsyncRelayCommand(SaveProfileAsync);
+
+            LoadFromSession();
+            _ = LoadProfileAsync();
         }
 
+        private void LoadFromSession()
+        {
+            var user = sessionManager.CurrentUser;
+            if (user == null) return;
+
+            FirstName = user.FirstName ?? string.Empty;
+            LastName = user.LastName ?? string.Empty;
+            UserName = user.UserName;
+            Email = user.Email;
+            Role = user.Role;
+            FullName = user.FullName;
+            Initials = user.Initials;
+            RoleAndClass = string.IsNullOrWhiteSpace(user.ClassName) ? user.Role : $"{user.Role} - Klasse {user.ClassName}";
+            LevelText = $"Level {user.Level}";
+            XpText = $"XP {user.XPPoints}";
+            TotalXp = user.XPPoints;
+
+            OnPropertyChanged(string.Empty);
+        }
+
+        // FA-27: echte Zahlen statt Platzhalter, sobald die Daten geladen sind
         private async Task LoadProfileAsync()
         {
-            await Task.CompletedTask;
+            var user = sessionManager.CurrentUser;
+            if (user == null) return;
+
+            var fresh = await _users.GetByIdAsync(user.UserId);
+            if (fresh != null)
+            {
+                sessionManager.CurrentUser = fresh;
+                TotalXp = fresh.XPPoints;
+                XpText = $"XP {fresh.XPPoints}";
+                LevelText = $"Level {fresh.Level}";
+            }
+
+            if (user.IsStudent)
+            {
+                var stats = await new StatisticsService().GetStudentStatsAsync(user);
+                OpenTasks = stats.OffeneAufgaben;
+                FinishedTasks = stats.Abgegeben;
+                AverageGrade = stats.Durchschnittsnote;
+            }
+
+            OnPropertyChanged(string.Empty);
         }
 
-        private void SaveProfile(object? parameter)
+        private async Task SaveProfileAsync()
         {
-            if (string.IsNullOrWhiteSpace(EditFirstName) || string.IsNullOrWhiteSpace(EditLastName) || string.IsNullOrWhiteSpace(EditEmail))
+            if (string.IsNullOrWhiteSpace(EditFirstName) || string.IsNullOrWhiteSpace(EditLastName))
             {
-                MessageBox.Show("Bitte alle Felder ausfüllen.");
+                MessageBox.Show("Bitte Vor- und Nachname ausfüllen.");
                 return;
             }
 
-            FirstName = EditFirstName;
-            LastName = EditLastName;
-            Email = EditEmail;
+            var user = sessionManager.CurrentUser;
+            if (user == null) return;
 
-            FullName = FirstName + " " + LastName;
-            Initials = FirstName.Substring(0, 1).ToUpper() + LastName.Substring(0,1).ToUpper();
+            await _users.UpdateProfileAsync(user.UserId, EditFirstName.Trim(), EditLastName.Trim());
+
+            FirstName = EditFirstName.Trim();
+            LastName = EditLastName.Trim();
+            FullName = $"{FirstName} {LastName}".Trim();
+            Initials = (FirstName.Substring(0, 1) + LastName.Substring(0, 1)).ToUpper();
+
+            user.FirstName = FirstName;
+            user.LastName = LastName;
 
             OnPropertyChanged(nameof(FirstName));
             OnPropertyChanged(nameof(LastName));
-            OnPropertyChanged(nameof(Email));
             OnPropertyChanged(nameof(FullName));
             OnPropertyChanged(nameof(Initials));
 
             IsEditProfileOpen = false;
-
         }
+
         private void EditProfile(object? parameter)
         {
             EditFirstName = FirstName;
@@ -118,12 +164,26 @@ namespace App_LernPlaner.ViewModels
 
         private void ChangePassword(object? parameter)
         {
-            MessageBox.Show("Change Password clicked");
+            var user = sessionManager.CurrentUser;
+            if (user == null) return;
+
+            MessageBox.Show(
+                "Bitte nutze \"Passwort vergessen?\" auf der Anmeldeseite, um dein Passwort zurückzusetzen.",
+                "Passwort ändern", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
+        // FA-02: ausloggen - beendet die Session und kehrt zur Anmeldeseite zurück.
         private void Logout(object? parameter)
         {
-            MessageBox.Show("Logout clicked");
+            var oldWindow = Application.Current.MainWindow;
+
+            sessionManager.Logout();
+
+            var login = new Nexus_Team.MainWindow();
+            Application.Current.MainWindow = login;
+            login.Show();
+
+            oldWindow?.Close();
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

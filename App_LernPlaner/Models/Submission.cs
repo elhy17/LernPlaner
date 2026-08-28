@@ -20,6 +20,9 @@ namespace App_LernPlaner.Models
 
         public DateTime SubmittedAt { get; set; }
 
+        public string? Grade { get; set; }
+        public string? Feedback { get; set; }
 
+        public bool IsGraded => !string.IsNullOrWhiteSpace(Grade);
     }
 }

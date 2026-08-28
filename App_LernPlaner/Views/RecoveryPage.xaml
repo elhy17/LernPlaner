@@ -8,7 +8,7 @@
             <TextBlock Text="Gib deine E-Mail Adresse ein, um dein Passwort zurückzusetzen." TextWrapping="Wrap" Margin="0,0,0,20" TextAlignment="Center"/>
 
             <TextBlock Text="E-Mail Adresse"/>
-            <TextBox Height="35" Margin="0,5,0,20" FontSize="14"/>
+            <TextBox x:Name="txtEmail" Height="35" Margin="0,5,0,20" FontSize="14"/>
 
             <Button Content="Passwort zurücksetzen" Background="#4A90E2" Foreground="White" Height="40" Click="BtnReset_Click"/>
             <Button Content="Abbrechen" Background="Transparent" BorderThickness="0" Margin="0,10" Click="BtnBackToLogin_Click"/>

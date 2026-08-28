@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using App_LernPlaner.Services;
 
 namespace Nexus_Team.views
 {
@@ -25,19 +14,35 @@ namespace Nexus_Team.views
             InitializeComponent();
         }
 
-        private void BtnReset_Click(object sender, RoutedEventArgs e)
+        // FA-04: Passwort zurücksetzen. Es ist kein SMTP konfiguriert (siehe EmailService),
+        // daher wird das neue temporäre Passwort direkt angezeigt statt per E-Mail versendet.
+        private async void BtnReset_Click(object sender, RoutedEventArgs e)
         {
+            string email = txtEmail.Text.Trim();
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                MessageBox.Show("Bitte E-Mail-Adresse eingeben.", "Ungültige Eingabe", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
 
+            var (success, _, tempPasswordOrError) = await new AuthService().TryResetPasswordAsync(email);
 
+            if (!success)
+            {
+                MessageBox.Show(tempPasswordOrError, "Zurücksetzen fehlgeschlagen", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            MessageBox.Show(
+                $"Dein neues temporäres Passwort lautet:\n\n{tempPasswordOrError}\n\nBitte melde dich damit an und ändere es anschließend in deinem Profil.",
+                "Passwort zurückgesetzt", MessageBoxButton.OK, MessageBoxImage.Information);
+
+            NavigationService?.Navigate(new LoginPage());
         }
 
         private void BtnBackToLogin_Click(object sender, RoutedEventArgs e)
         {
-
-
             NavigationService?.Navigate(new LoginPage());
-
-
         }
     }
 }

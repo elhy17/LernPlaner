@@ -89,7 +89,82 @@ namespace App_LernPlaner.Repositories
 
 
 
-        // Task hinzufügen 
+        public async Task<Models.StudyTask?> GetByIdAsync(int taskId)
+        {
+            using MySqlConnection conn = _db.GetConnection();
+            await conn.OpenAsync();
+
+            const string query = @"SELECT TaskId, UserId, Title, Subject, Description, Deadline, Priority, Status, IsRecurring, ClassId, CreatedBy
+                                    FROM Tasks WHERE TaskId = @taskId";
+            using MySqlCommand cmd = new(query, conn);
+            cmd.Parameters.AddWithValue("@taskId", taskId);
+
+            using var reader = await cmd.ExecuteReaderAsync();
+            return await reader.ReadAsync() ? MapTaskWithDescription(reader) : null;
+        }
+
+        // FA-14: sichtbar für Mitglieder der Klasse der Aufgabe ODER den Ersteller
+        public async Task<List<Models.StudyTask>> GetVisibleTasksForUserAsync(int userId)
+        {
+            List<Models.StudyTask> tasks = new();
+
+            using MySqlConnection conn = _db.GetConnection();
+            await conn.OpenAsync();
+
+            const string query = @"SELECT DISTINCT t.TaskId, t.UserId, t.Title, t.Subject, t.Description, t.Deadline, t.Priority, t.Status, t.IsRecurring, t.ClassId, t.CreatedBy
+                                    FROM Tasks t
+                                    LEFT JOIN ClassMembers cm ON cm.ClassId = t.ClassId AND cm.UserId = @userId
+                                    WHERE cm.UserId IS NOT NULL OR t.CreatedBy = @userId OR t.UserId = @userId
+                                    ORDER BY t.Deadline ASC";
+            using MySqlCommand cmd = new(query, conn);
+            cmd.Parameters.AddWithValue("@userId", userId);
+
+            using var reader = await cmd.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+                tasks.Add(MapTaskWithDescription(reader));
+
+            return tasks;
+        }
+
+        // Aufgaben, die ein Lehrer für eine seiner Klassen erstellt hat
+        public async Task<List<Models.StudyTask>> GetTasksByClassIdAsync(int classId)
+        {
+            List<Models.StudyTask> tasks = new();
+
+            using MySqlConnection conn = _db.GetConnection();
+            await conn.OpenAsync();
+
+            const string query = @"SELECT TaskId, UserId, Title, Subject, Description, Deadline, Priority, Status, IsRecurring, ClassId, CreatedBy
+                                    FROM Tasks WHERE ClassId = @classId ORDER BY Deadline ASC";
+            using MySqlCommand cmd = new(query, conn);
+            cmd.Parameters.AddWithValue("@classId", classId);
+
+            using var reader = await cmd.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+                tasks.Add(MapTaskWithDescription(reader));
+
+            return tasks;
+        }
+
+        public async Task UpdateAsync(Models.StudyTask task)
+        {
+            using MySqlConnection conn = _db.GetConnection();
+            await conn.OpenAsync();
+
+            const string query = @"UPDATE Tasks SET Title=@title, Subject=@sub, Description=@desc, Deadline=@dead,
+                                    Priority=@prio, ClassId=@classId WHERE TaskId=@taskId";
+            using MySqlCommand cmd = new(query, conn);
+            cmd.Parameters.AddWithValue("@title", task.Titel);
+            cmd.Parameters.AddWithValue("@sub", task.Subject);
+            cmd.Parameters.AddWithValue("@desc", task.Description);
+            cmd.Parameters.AddWithValue("@dead", task.Deadline);
+            cmd.Parameters.AddWithValue("@prio", task.Priority);
+            cmd.Parameters.AddWithValue("@classId", (object?)task.ClassId ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@taskId", task.TaskId);
+            await cmd.ExecuteNonQueryAsync();
+        }
+
+        // Task hinzufügen
 
         public async Task HinzufugenTask(Models.StudyTask task)
         {
@@ -152,12 +227,18 @@ namespace App_LernPlaner.Repositories
             {
                 await conn.OpenAsync();
 
+                using (MySqlCommand delSubs = new MySqlCommand("DELETE FROM Submissions WHERE TaskId = @taskId", conn))
+                {
+                    delSubs.Parameters.AddWithValue("@taskId", taskId);
+                    await delSubs.ExecuteNonQueryAsync();
+                }
+
                 string query = @"
                     DELETE FROM Tasks
                     WHERE TaskId = @taskId";
 
                 using (MySqlCommand cmd = new MySqlCommand(query, conn))
-                { 
+                {
 
                     cmd.Parameters.AddWithValue("@taskId", taskId);
 
@@ -185,6 +266,11 @@ namespace App_LernPlaner.Repositories
             };
         }
 
-
+        private Models.StudyTask MapTaskWithDescription(IDataRecord reader)
+        {
+            var task = MapTask(reader);
+            task.Description = reader["Description"]?.ToString() ?? "";
+            return task;
+        }
     }
 }

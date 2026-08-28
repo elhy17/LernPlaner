@@ -1,9 +1,6 @@
 ﻿using App_LernPlaner.Commands;
 using App_LernPlaner.Models;
 using App_LernPlaner.Services;
-using Microsoft.EntityFrameworkCore.Update.Internal;
-using Microsoft.Identity.Client;
-using Mysqlx.Prepare;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -226,16 +223,17 @@ namespace App_LernPlaner.ViewModels
             _taskService = new TaskService();
             _submissionService = new SubmissionService();
 
-            _currentUserId = 1; // Hier kommt user später bei Login
+            var currentUser = sessionManager.CurrentUser;
+            _currentUserId = currentUser?.UserId ?? 0;
             Aufgaben = new ObservableCollection<Models.StudyTask>();
 
-            GreettingText = "Guten Morgen, Amine 👋";
+            GreettingText = $"Guten Morgen, {currentUser?.FirstName ?? currentUser?.UserName ?? "Schüler"} 👋";
 
             CurrentDateText = DateTime.Now.ToString("ddd, dd. MMMM yyyy", new CultureInfo("de-DE"));
 
-            Durchschnittsnote = "2,3";
+            Durchschnittsnote = "-";
 
-            XpGesamt = 680;
+            XpGesamt = currentUser?.XPPoints ?? 0;
 
             LoadDashboardCommand = new Commands.AsyncRelayCommand(LoadDashboardAsync);
             RefreshCommand = new Commands.AsyncRelayCommand(LoadDashboardAsync);
@@ -257,7 +255,7 @@ namespace App_LernPlaner.ViewModels
         {
             try
             {
-                var tasks = await _taskService.GetTasksByUserIdAsync(_currentUserId); 
+                var tasks = await _taskService.GetTasksByUserIdAsync(_currentUserId);
 
                 Aufgaben.Clear();
 
@@ -270,6 +268,12 @@ namespace App_LernPlaner.ViewModels
                 Abgegeben = _taskService.CountFinishedTasks(tasks);
                 FaelligDieseWoche = _taskService.CountDueThisWeek(tasks);
 
+                if (sessionManager.CurrentUser != null)
+                {
+                    var stats = await new StatisticsService().GetStudentStatsAsync(sessionManager.CurrentUser);
+                    Durchschnittsnote = stats.Durchschnittsnote;
+                    XpGesamt = stats.XpGesamt;
+                }
             }
             catch (Exception ex)
             {

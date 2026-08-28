@@ -35,14 +35,12 @@
                 </Button.Template>
             </Button>
 
-            <Button Content="Anmelden" Background="#4A90E2" Foreground="White" FontWeight="Bold" 
+            <Button Content="Anmelden" Background="#4A90E2" Foreground="White" FontWeight="Bold"
                     Height="40" Margin="0,20,0,0" Click="BtnLogin_Click"/>
 
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20">
-                <TextBlock Text="Noch kein Konto? "/>
-                <Button Content="Hier registrieren" Foreground="#4A90E2" Background="Transparent" 
-                        BorderThickness="0" Cursor="Hand" Click="BtnGoToRegister_Click"/>
-            </StackPanel>
+            <TextBlock Text="Neue Konten werden ausschließlich vom IT-Administrator angelegt."
+                       Foreground="#888" FontSize="12" TextWrapping="Wrap" TextAlignment="Center"
+                       HorizontalAlignment="Center" Margin="0,20,0,0"/>
         </StackPanel>
     </Grid>
 </Page>
