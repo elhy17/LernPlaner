@@ -245,6 +245,12 @@
     Grid.RowSpan="4"
     Panel.ZIndex="30"
     Visibility="{Binding IsEditProfileOpen, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+        <profileViews:ChangePasswortView
+    Grid.RowSpan="4"
+    Panel.ZIndex="40"
+    Visibility="{Binding IsChangePasswordOpen, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
     </Grid>
     
 </Page>

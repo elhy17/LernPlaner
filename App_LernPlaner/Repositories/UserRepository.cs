@@ -53,6 +53,22 @@ namespace App_LernPlaner.Repositories
         
         }
 
+        public async Task UpdateUserProfileAsync(UserProfile profile)
+        {
+            using MySqlConnection conn = _db.GetConnection();
+            await conn.OpenAsync();
+
+            string query = "UPDATE Users SET FirstName=@firstName , LastName=@lastName, Email=@email WHERE UserId = @userId; ";
+
+            using MySqlCommand cmd = new MySqlCommand(query,conn);
+            cmd.Parameters.AddWithValue("@userId",profile.UserId);
+            cmd.Parameters.AddWithValue("@firstName",profile.FirstName);
+            cmd.Parameters.AddWithValue("@lastName", profile.LastName);
+            cmd.Parameters.AddWithValue("@email", profile.Email);
+
+            await cmd.ExecuteNonQueryAsync();
+        }
+
 
 
     }
