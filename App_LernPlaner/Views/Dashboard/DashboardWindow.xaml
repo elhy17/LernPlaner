@@ -93,7 +93,7 @@
                         </StackPanel>
                     </Button>
                     <!-- KALENDER -->
-                    <Button Style="{StaticResource SidebarButton}">
+                    <Button Style="{StaticResource SidebarButton}" Command="{Binding KalendarCommand}">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="📅" FontSize="14" VerticalAlignment="Center"/>
                             <TextBlock Text="Kalender" FontSize="14" Margin="10,0,0,0" VerticalAlignment="Center"/>

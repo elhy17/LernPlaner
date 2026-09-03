@@ -29,18 +29,23 @@ namespace App_LernPlaner.ViewModels
 
         public ICommand NavigateAufgabenCommand {  get; set; }
 
+        public ICommand KalendarCommand { get; set; }
+
 
         public DashboardWindowViewModel()
         {
-            NavigateDashboardCommand = new RelayCommand(() 
+            NavigateDashboardCommand = new RelayCommand(()
                 => CurrentPage = new App_LernPlaner.Views.DashboardPage());
 
-            NavigateAufgabenCommand = new RelayCommand(() 
+            NavigateAufgabenCommand = new RelayCommand(()
                 => CurrentPage = new App_LernPlaner.Views.AufgabenPage());
 
             CurrentPage = new App_LernPlaner.Views.DashboardPage();
 
-           
+            KalendarCommand = new RelayCommand(()
+                => CurrentPage = new App_LernPlaner.Views.KalenderPage());  
+
+
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
