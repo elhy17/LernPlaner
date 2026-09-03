@@ -18,21 +18,47 @@
                     BorderThickness="0" Cursor="Hand" Click="BtnMarkAll_Click"/>
         </Grid>
 
-        <ListView x:Name="NotifList" Grid.Row="1" Background="Transparent" BorderThickness="0">
+        <ListView x:Name="NotifList" Grid.Row="1" Background="Transparent" BorderThickness="0"
+                  MouseLeftButtonUp="NotifList_MouseLeftButtonUp">
             <ListView.Resources>
                 <Style TargetType="ListViewItem">
                     <Setter Property="Background" Value="#1E293B"/>
                     <Setter Property="Margin" Value="0,0,0,8"/>
                     <Setter Property="Padding" Value="12"/>
+                    <Setter Property="Cursor" Value="Hand"/>
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsRead}" Value="False">
+                            <Setter Property="BorderBrush" Value="#0EA5E9"/>
+                            <Setter Property="BorderThickness" Value="1,1,1,1"/>
+                        </DataTrigger>
+                    </Style.Triggers>
                 </Style>
             </ListView.Resources>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel>
-                        <TextBlock Text="{Binding Message}" Foreground="White" TextWrapping="Wrap" FontWeight="SemiBold"/>
-                        <TextBlock Text="{Binding TimeAgo}" Foreground="#64748B" FontSize="11" Margin="0,4,0,0"/>
-                    </StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Ellipse Grid.Column="0" Width="8" Height="8" Margin="0,4,10,0" VerticalAlignment="Top">
+                            <Ellipse.Style>
+                                <Style TargetType="Ellipse">
+                                    <Setter Property="Fill" Value="Transparent"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsRead}" Value="False">
+                                            <Setter Property="Fill" Value="#0EA5E9"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Ellipse.Style>
+                        </Ellipse>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="{Binding Message}" Foreground="White" TextWrapping="Wrap" FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding TimeAgo}" Foreground="#64748B" FontSize="11" Margin="0,4,0,0"/>
+                        </StackPanel>
+                    </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

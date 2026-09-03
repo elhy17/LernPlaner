@@ -33,6 +33,7 @@ namespace App_LernPlaner.Views
                 }
             };
 
+            Unloaded += (_, _) => viewModel.StopPolling();
         }
     }
 }

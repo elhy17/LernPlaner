@@ -42,7 +42,9 @@
                         Width="40" Height="40"
                         Background="#1F2937"
                         BorderBrush="#374151"
-                        BorderThickness="1">
+                        BorderThickness="1"
+                        Command="{Binding ShowNotificationsCommand}"
+                        Cursor="Hand">
                     <TextBlock Text="🔔"
                                FontSize="16"
                                Foreground="White"
@@ -335,26 +337,39 @@
             <Border Margin="20,-10,15,10"
                     Background="{StaticResource CardBrush}"
                     CornerRadius="12">
-                <StackPanel>
+                <StackPanel Margin="0,0,0,10">
                     <TextBlock Text="BENACHRICHTIGUNGEN"
                                FontSize="13" FontWeight="SemiBold"
-                               Foreground="#A0A0A0" Margin="15,0,0,15"/>
-                    <Border Background="#2A2A2A" CornerRadius="8"
-                            Padding="15" Margin="0,0,0,10">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="⚠" FontSize="18"
-                                       Foreground="#F4C542" VerticalAlignment="Center"/>
-                            <TextBlock Grid.Column="1" Margin="12,5,0,0"
-                                       Foreground="White" FontSize="14">
-                                <Run FontWeight="Bold" Text="Deadline in 24h:"/>
-                                <Run Text=" Mathe-Test Kapitel 3 – fällig am 23.05."/>
-                            </TextBlock>
-                        </Grid>
-                    </Border>
+                               Foreground="#A0A0A0" Margin="15,15,0,15"/>
+
+                    <TextBlock Text="Keine neuen Benachrichtigungen"
+                               Foreground="#71717A" FontSize="13"
+                               Margin="15,0,0,10"
+                               Visibility="{Binding NoNotificationsVisibility}"/>
+
+                    <ItemsControl ItemsSource="{Binding RecentNotifications}" Margin="15,0,15,0">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="#2A2A2A" CornerRadius="8"
+                                        Padding="15" Margin="0,0,0,10">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="⚠" FontSize="18"
+                                                   Foreground="#F4C542" VerticalAlignment="Center"/>
+                                        <StackPanel Grid.Column="1" Margin="12,0,0,0">
+                                            <TextBlock Text="{Binding Message}"
+                                                       Foreground="White" FontSize="14" TextWrapping="Wrap"/>
+                                            <TextBlock Text="{Binding TimeAgo}"
+                                                       Foreground="#71717A" FontSize="11" Margin="0,4,0,0"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </StackPanel>
             </Border>
         </Grid>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 using App_LernPlaner.Models;
 using App_LernPlaner.Services;
@@ -16,7 +17,19 @@ namespace App_LernPlaner.Views.Chat
         public string DisplayName { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
         public int UnreadCount { get; set; }
+        public string PreviewText { get; set; } = string.Empty;
+        public string LastMessageTimeText { get; set; } = string.Empty;
         public Visibility HasUnread => UnreadCount > 0 ? Visibility.Visible : Visibility.Collapsed;
+
+        public string Initials => string.IsNullOrWhiteSpace(DisplayName) ? "?" : DisplayName.Substring(0, 1).ToUpper();
+
+        // Farbe je Rolle - macht Lehrer/Schüler/Admin auf den ersten Blick unterscheidbar (Teams-artig).
+        public Brush AvatarBrush => Role switch
+        {
+            Roles.Lehrer => new SolidColorBrush(Color.FromRgb(0x7C, 0x3A, 0xED)),
+            Roles.Admin => new SolidColorBrush(Color.FromRgb(0xDC, 0x26, 0x26)),
+            _ => new SolidColorBrush(Color.FromRgb(0x25, 0x63, 0xEB))
+        };
     }
 
     public class MessageRowVm
@@ -29,6 +42,7 @@ namespace App_LernPlaner.Views.Chat
         public bool IsEdited { get; set; }
         public HorizontalAlignment Alignment => IsOwn ? HorizontalAlignment.Right : HorizontalAlignment.Left;
         public Visibility OwnMessageVisibility => IsOwn ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility OtherMessageVisibility => IsOwn ? Visibility.Collapsed : Visibility.Visible;
         public Visibility EditedVisibility => IsEdited ? Visibility.Visible : Visibility.Collapsed;
     }
 
@@ -37,6 +51,7 @@ namespace App_LernPlaner.Views.Chat
     {
         private readonly MessageService _messages = new();
         private readonly DispatcherTimer _pollTimer;
+        private List<Contact> _allContacts = new();
         private int? _selectedContactId;
         private int? _editingMessageId;
 
@@ -49,6 +64,7 @@ namespace App_LernPlaner.Views.Chat
             _pollTimer.Tick += async (_, _) =>
             {
                 if (_selectedContactId.HasValue) await LoadConversationAsync(_selectedContactId.Value);
+                else await LoadContactsAsync();
             };
             _pollTimer.Start();
             Unloaded += (_, _) => _pollTimer.Stop();
@@ -59,13 +75,29 @@ namespace App_LernPlaner.Views.Chat
             var user = sessionManager.CurrentUser;
             if (user == null) return;
 
-            var contacts = await _messages.GetContactsAsync(user.UserId);
-            ContactsList.ItemsSource = contacts.Select(c => new ContactRowVm
+            _allContacts = await _messages.GetContactsAsync(user.UserId);
+            ApplyContactFilter();
+        }
+
+        // MS Teams-artige Namenssuche: "h" zeigt alle Kontakte, deren Name mit h beginnt.
+        private void TxtSearch_TextChanged(object sender, TextChangedEventArgs e) => ApplyContactFilter();
+
+        private void ApplyContactFilter()
+        {
+            string term = (TxtSearch.Text ?? string.Empty).Trim();
+
+            var filtered = string.IsNullOrEmpty(term)
+                ? _allContacts
+                : _allContacts.Where(c => c.DisplayName.StartsWith(term, StringComparison.OrdinalIgnoreCase)).ToList();
+
+            ContactsList.ItemsSource = filtered.Select(c => new ContactRowVm
             {
                 UserId = c.UserId,
                 DisplayName = c.DisplayName,
                 Role = c.Role,
-                UnreadCount = c.UnreadCount
+                UnreadCount = c.UnreadCount,
+                PreviewText = string.IsNullOrWhiteSpace(c.LastMessage) ? "Noch keine Nachrichten" : c.LastMessage,
+                LastMessageTimeText = c.LastMessageAt.HasValue ? c.LastMessageAt.Value.ToString("HH:mm") : ""
             }).ToList();
         }
 
@@ -74,7 +106,13 @@ namespace App_LernPlaner.Views.Chat
             if (ContactsList.SelectedItem is not ContactRowVm contact) return;
 
             _selectedContactId = contact.UserId;
-            LblConversationWith.Text = $"Konversation mit {contact.DisplayName}";
+            LblConversationWith.Text = contact.DisplayName;
+            LblConversationRole.Text = contact.Role;
+            LblConversationInitials.Text = contact.Initials;
+
+            PanelEmptyState.Visibility = Visibility.Collapsed;
+            PanelConversation.Visibility = Visibility.Visible;
+
             ResetEditState();
             await LoadConversationAsync(contact.UserId);
         }

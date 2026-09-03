@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace App_LernPlaner.ViewModels
 {
@@ -15,10 +16,16 @@ namespace App_LernPlaner.ViewModels
     {
         private readonly SubmissionService _submissionService;
         private readonly Services.TaskService _taskService;
+        private readonly NotificationService _notificationService = new();
+        private readonly DispatcherTimer _pollTimer;
         private readonly int _currentUserId;
 
 
         public ObservableCollection<Models.StudyTask> Aufgaben { get; set; }
+
+        // FA-25: aktuelle Benachrichtigungen (neue Aufgabe, Nachricht, Bewertung, ...) im Dashboard
+        public ObservableCollection<Notification> RecentNotifications { get; } = new();
+        public Visibility NoNotificationsVisibility => RecentNotifications.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
 
 
         private string _grettingText;
@@ -216,6 +223,7 @@ namespace App_LernPlaner.ViewModels
 
         public ICommand ChooseSubmissionFileCommand { get; }
         public ICommand MarkTaskAsDoneCommand { get; }
+        public ICommand ShowNotificationsCommand { get; }
 
 
         public DashboardViewModel()
@@ -249,13 +257,44 @@ namespace App_LernPlaner.ViewModels
             ChooseSubmissionFileCommand = new RelayCommand(ChooseSubmissionFile);
             
             MarkTaskAsDoneCommand = new AsyncRelayCommand(MarkTaskAsDoneAsync);
+            ShowNotificationsCommand = new RelayCommand(() => AppNavigator.NavigateTo(new App_LernPlaner.Views.NotificationsPage()));
+
+            // FA-25: Benachrichtigungen alle 30 Sekunden aus der Datenbank nachladen,
+            // damit neue Nachrichten/Aufgaben/Bewertungen ohne manuelles Neuladen auftauchen.
+            _pollTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(30) };
+            _pollTimer.Tick += async (_, _) => await LoadNotificationsAsync();
+            _pollTimer.Start();
+        }
+
+        public void StopPolling() => _pollTimer.Stop();
+
+        private async Task LoadNotificationsAsync()
+        {
+            var currentUser = sessionManager.CurrentUser;
+            if (currentUser == null) return;
+
+            var latest = await _notificationService.GetForUserAsync(currentUser.UserId);
+
+            RecentNotifications.Clear();
+            foreach (var n in latest.Take(5))
+                RecentNotifications.Add(n);
+
+            OnPropertyChanged(nameof(NoNotificationsVisibility));
         }
 
         private async Task LoadDashboardAsync()
         {
             try
             {
-                var tasks = await _taskService.GetTasksByUserIdAsync(_currentUserId);
+                var currentUser = sessionManager.CurrentUser;
+                if (currentUser == null) return;
+
+                await LoadNotificationsAsync();
+
+                // FA-14: dieselbe Sichtbarkeit wie überall sonst (eigene Klassen + selbst erstellte
+                // Aufgaben), statt nur Aufgaben mit exakt passender UserId-Spalte - sonst sieht ein
+                // Schüler die vom Lehrer erstellten Aufgaben seiner Klasse hier nie.
+                var tasks = await _taskService.GetVisibleTasksForUserAsync(currentUser);
 
                 Aufgaben.Clear();
 
