@@ -80,7 +80,7 @@
                                    Foreground="White"
                                    BorderBrush="#334155"
                                  BorderThickness="1"
-                                 Padding="12"
+                                 Padding="8"
                                  FontSize="15"
                                  VerticalContentAlignment="Center"/>
                     </StackPanel>
@@ -96,7 +96,7 @@
                                   Foreground="White"
                                   BorderBrush="#334155"
                                 BorderThickness="1"
-                                Padding="12"
+                                Padding="8"
                                 FontSize="15"
                                 VerticalContentAlignment="Center"/>
                     </StackPanel>
@@ -112,7 +112,7 @@
                               Foreground="White"
                               BorderBrush="#334155"
                             BorderThickness="1"
-                            Padding="12"
+                            Padding="8"
                             FontSize="15"
                             VerticalContentAlignment="Center"/>
                     </StackPanel>

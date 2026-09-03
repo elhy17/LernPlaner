@@ -22,12 +22,13 @@ namespace App_LernPlaner.Views.Dashboard
             InitializeComponent();
             _viewModel = new DashboardWindowViewModel();
             DataContext = _viewModel;
-            
+
         }
 
-        private void Aufgaben_Click(object sender, RoutedEventArgs e)
+        private void Profil_Click(object sender, RoutedEventArgs e)
         {
             MainFrame.Navigate(new App_LernPlaner.Views.ProfilePage());
         }
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using App_LernPlaner.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,7 +24,21 @@ namespace App_LernPlaner.Views
         public ProfilePage()
         {
             InitializeComponent();
-            DataContext = new ViewModels.ProfileViewModel();
+            var viewModel = new ProfileViewModel();
+            DataContext = viewModel;
+
+            Loaded += (_, _) =>
+            {
+                if (viewModel.LoadProfileCommand.CanExecute(null))
+                {
+                    viewModel.LoadProfileCommand.Execute(null);
+                }
+            };
+        }
+
+        private void Logout()
+        {
+            // Später: Implementiere die Logout-Logik hier   
         }
     }
 }

@@ -50,7 +50,6 @@ namespace App_LernPlaner.ViewModels
         public ICommand NavigateNotificationsCommand { get; set; }
         public ICommand NavigateChatCommand { get; set; }
 
-
         public DashboardWindowViewModel()
         {
             var user = sessionManager.CurrentUser;
@@ -65,7 +64,7 @@ namespace App_LernPlaner.ViewModels
                 => CurrentPage = new App_LernPlaner.Views.AufgabenPage());
 
             NavigateKalenderCommand = new RelayCommand(()
-                => CurrentPage = new App_LernPlaner.Views.Planning.KalenderPage());
+                => CurrentPage = new App_LernPlaner.Views.KalenderPage());
 
             NavigateStatistikCommand = new RelayCommand(()
                 => CurrentPage = new App_LernPlaner.Views.Statistics.StatistikPage());

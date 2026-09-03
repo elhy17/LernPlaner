@@ -53,7 +53,7 @@ namespace App_LernPlaner.Views.Teacher
         private void BtnGrading_Click(object sender, RoutedEventArgs e) => MainFrame.Navigate(new SubmissionReviewTaskListPage());
         private void BtnRanking_Click(object sender, RoutedEventArgs e) => MainFrame.Navigate(new RankingPage());
         private void BtnStatistik_Click(object sender, RoutedEventArgs e) => MainFrame.Navigate(new Statistics.StatistikPage());
-        private void BtnKalender_Click(object sender, RoutedEventArgs e) => MainFrame.Navigate(new Planning.KalenderPage());
+        private void BtnKalender_Click(object sender, RoutedEventArgs e) => MainFrame.Navigate(new KalenderPage());
         private void BtnNotifications_Click(object sender, RoutedEventArgs e) => MainFrame.Navigate(new NotificationsPage());
         private void BtnChat_Click(object sender, RoutedEventArgs e) => MainFrame.Navigate(new Chat.ChatPage());
         private void BtnProfil_Click(object sender, RoutedEventArgs e) => MainFrame.Navigate(new ProfilePage());

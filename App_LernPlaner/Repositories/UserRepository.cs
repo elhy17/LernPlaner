@@ -158,6 +158,23 @@ namespace App_LernPlaner.Repositories
             await cmd.ExecuteNonQueryAsync();
         }
 
+        // FA-06: Profilbearbeitung über das UserProfile-DTO (ProfileViewModel)
+        public async Task UpdateUserProfileAsync(UserProfile profile)
+        {
+            using MySqlConnection conn = _db.GetConnection();
+            await conn.OpenAsync();
+
+            string query = "UPDATE Users SET FirstName=@firstName , LastName=@lastName, Email=@email WHERE UserId = @userId; ";
+
+            using MySqlCommand cmd = new MySqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@userId", profile.UserId);
+            cmd.Parameters.AddWithValue("@firstName", profile.FirstName);
+            cmd.Parameters.AddWithValue("@lastName", profile.LastName);
+            cmd.Parameters.AddWithValue("@email", profile.Email);
+
+            await cmd.ExecuteNonQueryAsync();
+        }
+
         // Behalten für Repositories/ViewModels, die weiterhin das ältere UserProfile-DTO erwarten.
         public async Task<UserProfile?> GetUserProfileByIdAsync(int userId)
         {

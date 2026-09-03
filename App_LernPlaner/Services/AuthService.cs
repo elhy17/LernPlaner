@@ -109,5 +109,34 @@ namespace App_LernPlaner.Services
 
             return (true, found, tempPassword);
         }
+
+        /// <summary>
+        /// Eigenes Passwort ändern (FA-06), während man eingeloggt ist - im Unterschied zu
+        /// TryResetPasswordAsync muss hier das aktuelle Passwort korrekt eingegeben werden.
+        /// </summary>
+        public async Task<(bool Success, string Error)> TryChangePasswordAsync(int userId, string currentPassword, string newPassword)
+        {
+            if (string.IsNullOrWhiteSpace(newPassword) || newPassword.Length < 8)
+                return (false, "Das neue Passwort muss mindestens 8 Zeichen lang sein.");
+
+            User? user = AppConfig.UseMockData
+                ? MockDatabase.Users.FirstOrDefault(u => u.UserId == userId)
+                : await _users.GetByIdAsync(userId);
+
+            if (user == null)
+                return (false, "Benutzer nicht gefunden.");
+
+            if (!BCrypt.Net.BCrypt.Verify(currentPassword, user.PasswordHash))
+                return (false, "Das aktuelle Passwort ist falsch.");
+
+            string newHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+
+            if (AppConfig.UseMockData)
+                user.PasswordHash = newHash;
+            else
+                await _users.UpdatePasswordAsync(userId, newHash);
+
+            return (true, string.Empty);
+        }
     }
 }
