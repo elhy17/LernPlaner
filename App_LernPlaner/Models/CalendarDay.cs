@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace App_LernPlaner.Models
 {
@@ -16,6 +17,14 @@ namespace App_LernPlaner.Models
 
         public ObservableCollection<StudyTask> Tasks { get; set; } = new();
 
+        public ObservableCollection<StudyTask> VisibleTasks =>
+            new ObservableCollection<StudyTask>(Tasks.Take(2));
+
+        public string MoreTasksText =>
+            Tasks.Count > 2 ? $"+ {Tasks.Count - 2} weitere" : string.Empty;
+
+        public Visibility MoreTasksVisibility =>
+            Tasks.Count > 2 ? Visibility.Visible : Visibility.Collapsed;
 
         public string DayForeground =>
             IsCurrentMonth ? "White" : "#64748B";

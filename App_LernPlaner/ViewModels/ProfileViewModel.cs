@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using App_LernPlaner.Views;
 
 namespace App_LernPlaner.ViewModels
 {
@@ -247,7 +248,7 @@ namespace App_LernPlaner.ViewModels
 
             sessionManager.Logout();
 
-            var login = new Nexus_Team.MainWindow();
+            var login = new LoginPage();
             Application.Current.MainWindow = login;
             login.Show();
 

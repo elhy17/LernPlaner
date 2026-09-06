@@ -1,10 +1,10 @@
 using System.Windows;
-using System.Windows.Controls;
+using App_LernPlaner.Models;
 using App_LernPlaner.Services;
 
-namespace Nexus_Team.views
+namespace App_LernPlaner.Views  
 {
-    public partial class LoginPage : Page
+    public partial class LoginPage : Window
     {
         public LoginPage()
         {
@@ -13,7 +13,19 @@ namespace Nexus_Team.views
 
         private void BtnRecover_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new RecoveryPage());
+            var window = new Window
+            {
+                Title = "Passwort wiederherstellen",
+                Width = 1100,
+                Height = 680,
+                MinWidth = 900,
+                MinHeight = 560,
+                Background = System.Windows.Media.Brushes.Transparent,
+                WindowStartupLocation = WindowStartupLocation.CenterScreen,
+                Content = new RecoveryPage()
+            };
+
+            window.ShowDialog();
         }
 
         private async void BtnLogin_Click(object sender, RoutedEventArgs e)
@@ -23,7 +35,12 @@ namespace Nexus_Team.views
 
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
-                MessageBox.Show("Bitte Benutzername und Passwort eingeben.", "Ungültige Eingabe", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(
+                    "Bitte Benutzername und Passwort eingeben.",
+                    "Ungültige Eingabe",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+
                 return;
             }
 
@@ -31,17 +48,30 @@ namespace Nexus_Team.views
 
             if (!result.Success || result.User == null)
             {
-                MessageBox.Show(result.Error, "Anmeldung fehlgeschlagen", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(
+                    result.Error,
+                    "Anmeldung fehlgeschlagen",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+
                 return;
             }
 
             sessionManager.CurrentUser = result.User;
+
             await new GamificationService().AwardDailyLoginAsync(result.User.UserId);
 
-            if (Window.GetWindow(this) is MainWindow mainWindow)
+            Window dashboard = result.User.Role switch
             {
-                mainWindow.GoToDashboard(result.User);
-            }
+                Roles.Admin => new Admin.AdminDashboardWindow(),
+                Roles.Lehrer => new Teacher.TeacherDashboardWindow(),
+                _ => new Dashboard.DashboardWindow()
+            };
+
+            Application.Current.MainWindow = dashboard;
+            dashboard.Show();
+
+            Close();
         }
     }
 }

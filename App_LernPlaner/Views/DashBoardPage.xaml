@@ -10,10 +10,10 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="70"/>
-            <RowDefinition Height="200"/>
-            <RowDefinition Height="330"/>
+            <RowDefinition Height="84"/>
+            <RowDefinition Height="170"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="0"/>
         </Grid.RowDefinitions>
 
         <!-- HEADER -->
@@ -55,7 +55,7 @@
         </Border>
 
         <!-- STATISTIK KARTEN -->
-        <Grid Margin="20" Grid.Row="1">
+        <Grid Margin="10,8,10,18" Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
@@ -65,7 +65,7 @@
 
             <Border Grid.Column="0" Background="#1E1E1E"
                     Style="{StaticResource DashboardCard}"
-                    Margin="10" BorderBrush="#2A2A2A" BorderThickness="1">
+                    Margin="10,0" BorderBrush="#2A2A2A" BorderThickness="1">
                 <StackPanel>
                     <TextBlock Text="Offene Aufgaben" Foreground="#A1A1AA" FontSize="13"/>
                     <TextBlock Text="{Binding OffeneAufgaben}" Foreground="White"
@@ -76,7 +76,7 @@
 
             <Border Grid.Column="1" Background="#1E1E1E"
                     Style="{StaticResource DashboardCard}"
-                    Margin="10" BorderBrush="#2A2A2A" BorderThickness="1">
+                    Margin="10,0" BorderBrush="#2A2A2A" BorderThickness="1">
                 <StackPanel>
                     <TextBlock Text="Abgegeben" Foreground="#A1A1AA"/>
                     <TextBlock Text="{Binding Abgegeben}" Foreground="White"
@@ -87,7 +87,7 @@
 
             <Border Grid.Column="2" Background="#1E1E1E"
                     Style="{StaticResource DashboardCard}"
-                    Margin="10" BorderBrush="#2A2A2A" BorderThickness="1">
+                    Margin="10,0" BorderBrush="#2A2A2A" BorderThickness="1">
                 <StackPanel>
                     <TextBlock Text="Durchschnittsnote" Foreground="#A1A1AA"/>
                     <TextBlock Text="{Binding Durchschnittsnote}" Foreground="White"
@@ -98,7 +98,7 @@
 
             <Border Grid.Column="3" Background="#1E1E1E"
                     Style="{StaticResource DashboardCard}"
-                    Margin="10" BorderBrush="#2A2A2A" BorderThickness="1">
+                    Margin="10,0" BorderBrush="#2A2A2A" BorderThickness="1">
                 <StackPanel>
                     <TextBlock Text="XP Gesamt" Foreground="#A1A1AA"/>
                     <TextBlock Text="{Binding XpGesamt}" Foreground="White"
@@ -109,9 +109,12 @@
         </Grid>
 
         <!-- AUFGABEN LISTE -->
-        <Grid Grid.Row="2" Margin="0,-15,0,10">
-            <Border Margin="10" Background="{StaticResource CardBrush}"
-                    CornerRadius="12" Padding="20">
+        <Grid Grid.Row="2" Margin="10,0,10,18">
+            <Border Background="{StaticResource CardBrush}"
+                    CornerRadius="12"
+                    Padding="20"
+                    BorderBrush="#1F2937"
+                    BorderThickness="1">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -333,46 +336,7 @@
         </Grid>
 
         <!-- BENACHRICHTIGUNGEN -->
-        <Grid Grid.Row="3">
-            <Border Margin="20,-10,15,10"
-                    Background="{StaticResource CardBrush}"
-                    CornerRadius="12">
-                <StackPanel Margin="0,0,0,10">
-                    <TextBlock Text="BENACHRICHTIGUNGEN"
-                               FontSize="13" FontWeight="SemiBold"
-                               Foreground="#A0A0A0" Margin="15,15,0,15"/>
-
-                    <TextBlock Text="Keine neuen Benachrichtigungen"
-                               Foreground="#71717A" FontSize="13"
-                               Margin="15,0,0,10"
-                               Visibility="{Binding NoNotificationsVisibility}"/>
-
-                    <ItemsControl ItemsSource="{Binding RecentNotifications}" Margin="15,0,15,0">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Border Background="#2A2A2A" CornerRadius="8"
-                                        Padding="15" Margin="0,0,0,10">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto"/>
-                                            <ColumnDefinition Width="*"/>
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Text="⚠" FontSize="18"
-                                                   Foreground="#F4C542" VerticalAlignment="Center"/>
-                                        <StackPanel Grid.Column="1" Margin="12,0,0,0">
-                                            <TextBlock Text="{Binding Message}"
-                                                       Foreground="White" FontSize="14" TextWrapping="Wrap"/>
-                                            <TextBlock Text="{Binding TimeAgo}"
-                                                       Foreground="#71717A" FontSize="11" Margin="0,4,0,0"/>
-                                        </StackPanel>
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </StackPanel>
-            </Border>
-        </Grid>
+       
 
         <taskViews:TaskDetailView Grid.RowSpan="4"
                                   Panel.ZIndex="20"

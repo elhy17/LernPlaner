@@ -69,7 +69,7 @@ namespace App_LernPlaner.Repositories
                             ORDER BY t.Deadline ASC";
                 using (MySqlCommand cmd = new MySqlCommand(query,conn))
                 {
-                    cmd.Parameters.AddWithValue("UserId",UserId);
+                    cmd.Parameters.AddWithValue("@userId",UserId);
 
                     using (var reader = await cmd.ExecuteReaderAsync(CommandBehavior.Default))
                     {
@@ -111,9 +111,21 @@ namespace App_LernPlaner.Repositories
             using MySqlConnection conn = _db.GetConnection();
             await conn.OpenAsync();
 
-            const string query = @"SELECT DISTINCT t.TaskId, t.UserId, t.Title, t.Subject, t.Description, t.Deadline, t.Priority, t.Status, t.IsRecurring, t.ClassId, t.CreatedBy
+            const string query = @"SELECT DISTINCT
+                                        t.TaskId,
+                                        t.UserId,
+                                        t.Title,
+                                        t.Subject,
+                                        t.Description,
+                                        t.Deadline,
+                                        t.Priority,
+                                        COALESCE(s.Status, t.Status) AS Status,
+                                        t.IsRecurring,
+                                        t.ClassId,
+                                        t.CreatedBy
                                     FROM Tasks t
                                     LEFT JOIN ClassMembers cm ON cm.ClassId = t.ClassId AND cm.UserId = @userId
+                                    LEFT JOIN Submissions s ON s.TaskId = t.TaskId AND s.UserId = @userId
                                     WHERE cm.UserId IS NOT NULL OR t.CreatedBy = @userId OR t.UserId = @userId
                                     ORDER BY t.Deadline ASC";
             using MySqlCommand cmd = new(query, conn);

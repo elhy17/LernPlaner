@@ -2,7 +2,7 @@ using System.Windows;
 using System.Windows.Controls;
 using App_LernPlaner.Services;
 
-namespace Nexus_Team.views
+namespace App_LernPlaner.Views
 {
     /// <summary>
     /// Interaction logic for RecoveryPage.xaml
@@ -37,12 +37,12 @@ namespace Nexus_Team.views
                 $"Dein neues temporäres Passwort lautet:\n\n{tempPasswordOrError}\n\nBitte melde dich damit an und ändere es anschließend in deinem Profil.",
                 "Passwort zurückgesetzt", MessageBoxButton.OK, MessageBoxImage.Information);
 
-            NavigationService?.Navigate(new LoginPage());
+            Window.GetWindow(this)?.Close();
         }
 
         private void BtnBackToLogin_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService?.Navigate(new LoginPage());
+            Window.GetWindow(this)?.Close();
         }
     }
 }

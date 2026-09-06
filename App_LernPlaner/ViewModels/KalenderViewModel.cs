@@ -32,7 +32,7 @@ namespace App_LernPlaner.ViewModels
         {
             _taskService = new Services.TaskService();
 
-            _currentMonth = new DateTime(DateTime.Now.Year, DateTime.Today.Month, 1);
+            _currentMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
 
             LoadCalendarCommand = new Commands.AsyncRelayCommand(LoadClendarAsync);
             PreviousMonthCommand = new Commands.RelayCommand(PreviousMonth);
@@ -60,7 +60,7 @@ namespace App_LernPlaner.ViewModels
             }
         }
 
-        public int overdueTaskCount =>
+        public int OverdueTaskCount =>
             _alltasks.Count(task => task.Status != 2 && task.Deadline.Date < DateTime.Today);
 
         private async Task LoadClendarAsync()
@@ -79,7 +79,7 @@ namespace App_LernPlaner.ViewModels
                 OnPropertyChanged(nameof(MonthTitle));
                 OnPropertyChanged(nameof(TodayTaskCount));
                 OnPropertyChanged(nameof(WeekTaskCount));
-                OnPropertyChanged(nameof(overdueTaskCount));
+                OnPropertyChanged(nameof(OverdueTaskCount));
 
             }
             catch (Exception ex)

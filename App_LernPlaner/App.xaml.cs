@@ -21,7 +21,7 @@ namespace App_LernPlaner
 
             try
             {
-                var window = new Nexus_Team.MainWindow();
+                var window = new Views.LoginPage();
                 window.Show();
             }
             catch (Exception ex)

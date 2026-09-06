@@ -59,7 +59,7 @@ namespace App_LernPlaner.Views.Admin
         private void BtnLogout_Click(object sender, RoutedEventArgs e)
         {
             sessionManager.Logout();
-            var login = new Nexus_Team.MainWindow();
+            var login = new LoginPage();
             Application.Current.MainWindow = login;
             login.Show();
             Close();

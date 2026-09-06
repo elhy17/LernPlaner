@@ -1,7 +1,7 @@
 using System.Windows;
 using App_LernPlaner.Models;
 using App_LernPlaner.Services;
-using Nexus_Team.views;
+using App_LernPlaner.Views;
 
 namespace Nexus_Team
 {
