@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using Microsoft.Win32;
 using App_LernPlaner.Models;
 using App_LernPlaner.Services;
@@ -42,6 +43,8 @@ namespace App_LernPlaner.Views.Statistics
 
                 int minutes = await _statisticsService.GetTotalStudyMinutesAsync(user.UserId);
                 LblStudyTime.Text = minutes >= 60 ? $"{minutes / 60}h {minutes % 60}m" : $"{minutes}m";
+
+                await LoadSubjectStatsAsync(user);
             }
             else
             {
@@ -66,6 +69,57 @@ namespace App_LernPlaner.Views.Statistics
                         $"Klassen: {sys.TotalClasses}\nAufgaben: {sys.TotalTasks}\nAbgaben: {sys.TotalSubmissions}";
                 }
             }
+        }
+
+        private async System.Threading.Tasks.Task LoadSubjectStatsAsync(User user)
+        {
+            var tasks = await _taskService.GetVisibleTasksForUserAsync(user);
+
+            var rows = tasks
+                .Where(task => !string.IsNullOrWhiteSpace(task.Subject))
+                .GroupBy(task => task.Subject.Trim())
+                .Select((group, index) =>
+                {
+                    int total = group.Count();
+                    int completed = group.Count(task => task.Status >= 2);
+                    int percentage = total == 0
+                        ? 0
+                        : (int)System.Math.Round(completed * 100.0 / total);
+
+                    return new SubjectStatisticsRow
+                    {
+                        Subject = group.Key,
+                        TotalTasks = total,
+                        CompletedTasks = completed,
+                        Percentage = percentage,
+                        PercentageText = $"{percentage}%",
+                        DetailText = $"{completed} von {total} erledigt",
+                        BarBrush = GetSubjectBrush(index)
+                    };
+                })
+                .OrderByDescending(row => row.Percentage)
+                .ThenBy(row => row.Subject)
+                .ToList();
+
+            SubjectStatsList.ItemsSource = rows;
+            SubjectStatsEmptyText.Visibility = rows.Count == 0
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+        }
+
+        private static Brush GetSubjectBrush(int index)
+        {
+            string[] colors =
+            {
+                "#2563EB",
+                "#0EA5E9",
+                "#16A34A",
+                "#F97316",
+                "#8B5CF6",
+                "#EAB308"
+            };
+
+            return (Brush)new BrushConverter().ConvertFromString(colors[index % colors.Length])!;
         }
 
         private async void BtnLogSession_Click(object sender, RoutedEventArgs e)
@@ -135,5 +189,16 @@ namespace App_LernPlaner.Views.Statistics
 
             MessageBox.Show("Noten wurden exportiert.", "Erfolgreich", MessageBoxButton.OK, MessageBoxImage.Information);
         }
+    }
+
+    public class SubjectStatisticsRow
+    {
+        public string Subject { get; set; } = string.Empty;
+        public int TotalTasks { get; set; }
+        public int CompletedTasks { get; set; }
+        public int Percentage { get; set; }
+        public string PercentageText { get; set; } = "0%";
+        public string DetailText { get; set; } = string.Empty;
+        public Brush BarBrush { get; set; } = Brushes.DodgerBlue;
     }
 }

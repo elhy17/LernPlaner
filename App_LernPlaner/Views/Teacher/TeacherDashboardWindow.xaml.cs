@@ -58,6 +58,23 @@ namespace App_LernPlaner.Views.Teacher
         private void BtnChat_Click(object sender, RoutedEventArgs e) => MainFrame.Navigate(new Chat.ChatPage());
         private void BtnProfil_Click(object sender, RoutedEventArgs e) => MainFrame.Navigate(new ProfilePage());
 
+        private void MinimizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
+        }
+
+        private void MaximizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState == WindowState.Maximized
+                ? WindowState.Normal
+                : WindowState.Maximized;
+        }
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
         private void BtnLogout_Click(object sender, RoutedEventArgs e)
         {
             sessionManager.Logout();

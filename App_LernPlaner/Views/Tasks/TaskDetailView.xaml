@@ -473,7 +473,7 @@
                                 Grid.ColumnSpan="2"
                                 BorderBrush="#263244"
                                 BorderThickness="0,1,0,0"
-                                Padding="0,20,0,0">
+                                Padding="0,2,0,0">
 
                             <Grid>
                                 <Grid.ColumnDefinitions>

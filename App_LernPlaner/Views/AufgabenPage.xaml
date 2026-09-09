@@ -514,12 +514,12 @@
 
         <taskViews:AddTaskView
     Grid.RowSpan="4"
-    Panel.ZIndex="30"
+    Panel.ZIndex="40"
     Visibility="{Binding IsAddTaskOpen, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
         <taskViews:TaskDetailView
     Grid.RowSpan="4"
-    Panel.ZIndex="40"
+    Panel.ZIndex="20"
     Visibility="{Binding IsTaskDetailsOpen, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
     </Grid>
