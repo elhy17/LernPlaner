@@ -157,7 +157,7 @@
                     <TextBlock Grid.Row="4" Text="Erstellt von" Foreground="#CBD5E1" FontSize="15"/>
                     <TextBlock Grid.Row="4"
                                Grid.Column="1"
-                               Text="{Binding SelectedTask.CreatedBy, TargetNullValue=Unbekannt, StringFormat=User {0}}"
+                               Text="{Binding SelectedTask.CreatedByUsername, TargetNullValue=Unbekannt}"
                                Foreground="White"
                                FontSize="15"/>
                 </Grid>

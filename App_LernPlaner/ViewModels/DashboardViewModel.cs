@@ -235,7 +235,7 @@ namespace App_LernPlaner.ViewModels
             _currentUserId = currentUser?.UserId ?? 0;
             Aufgaben = new ObservableCollection<Models.StudyTask>();
 
-            GreettingText = $"Guten Morgen, {currentUser?.FirstName ?? currentUser?.UserName ?? "Schüler"} 👋";
+            GreettingText = BuildGreetingText(currentUser);
 
             CurrentDateText = DateTime.Now.ToString("ddd, dd. MMMM yyyy", new CultureInfo("de-DE"));
 
@@ -267,6 +267,19 @@ namespace App_LernPlaner.ViewModels
         }
 
         public void StopPolling() => _pollTimer.Stop();
+
+        private static string BuildGreetingText(User? user)
+        {
+            string? displayName = user?.FullName;
+
+            if (string.IsNullOrWhiteSpace(displayName))
+                displayName = user?.UserName;
+
+            if (string.IsNullOrWhiteSpace(displayName))
+                displayName = "Schüler";
+
+            return $"Guten Morgen, {displayName} 👋";
+        }
 
         private async Task LoadNotificationsAsync()
         {

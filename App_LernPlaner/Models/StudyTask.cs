@@ -13,6 +13,7 @@ namespace App_LernPlaner.Models
         public string ButtonText { get; set; } 
         public int? ClassId { get; set; }
         public int? CreatedBy { get; set; }
+        public string CreatedByUsername { get; set; } = "Unbekannt";
         public string Titel { get; set; }
         public string Subject { get; set; }
         public DateTime Deadline { get; set; }

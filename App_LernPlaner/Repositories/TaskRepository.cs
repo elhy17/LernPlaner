@@ -25,7 +25,21 @@ namespace App_LernPlaner.Repositories
             {
                 await conn.OpenAsync();
 
-                string query = @"SELECT TaskId ,  UserId , Title , Subject , Deadline , Priority , Status, IsRecurring, ClassId, CreatedBy FROM Tasks ORDER BY Deadline ASC";
+                string query = @"SELECT
+                                      t.TaskId,
+                                      t.UserId,
+                                      t.Title,
+                                      t.Subject,
+                                      t.Deadline,
+                                      t.Priority,
+                                      t.Status,
+                                      t.IsRecurring,
+                                      t.ClassId,
+                                      t.CreatedBy,
+                                      COALESCE(NULLIF(TRIM(CONCAT_WS(' ', u.FirstName, u.LastName)), ''), u.Username, 'Unbekannt') AS CreatedByUsername
+                                  FROM Tasks t
+                                  LEFT JOIN Users u ON u.UserId = t.CreatedBy
+                                  ORDER BY t.Deadline ASC";
 
                 using (MySqlCommand cmd = new(query, conn))
                 using (var reader = await cmd.ExecuteReaderAsync(System.Data.CommandBehavior.Default))
@@ -60,8 +74,10 @@ namespace App_LernPlaner.Repositories
                                 COALESCE(s.Status, t.Status) AS Status,
                                 t.IsRecurring,
                                 t.ClassId,
-                                t.CreatedBy
+                                t.CreatedBy,
+                                COALESCE(NULLIF(TRIM(CONCAT_WS(' ', u.FirstName, u.LastName)), ''), u.Username, 'Unbekannt') AS CreatedByUsername
                             FROM Tasks t
+                            LEFT JOIN Users u ON u.UserId = t.CreatedBy
                             LEFT JOIN Submissions s
                             ON s.TaskId = t.TaskId
                             AND s.UserId = @userId
@@ -94,8 +110,22 @@ namespace App_LernPlaner.Repositories
             using MySqlConnection conn = _db.GetConnection();
             await conn.OpenAsync();
 
-            const string query = @"SELECT TaskId, UserId, Title, Subject, Description, Deadline, Priority, Status, IsRecurring, ClassId, CreatedBy
-                                    FROM Tasks WHERE TaskId = @taskId";
+            const string query = @"SELECT
+                                        t.TaskId,
+                                        t.UserId,
+                                        t.Title,
+                                        t.Subject,
+                                        t.Description,
+                                        t.Deadline,
+                                        t.Priority,
+                                        t.Status,
+                                        t.IsRecurring,
+                                        t.ClassId,
+                                        t.CreatedBy,
+                                        COALESCE(NULLIF(TRIM(CONCAT_WS(' ', u.FirstName, u.LastName)), ''), u.Username, 'Unbekannt') AS CreatedByUsername
+                                    FROM Tasks t
+                                    LEFT JOIN Users u ON u.UserId = t.CreatedBy
+                                    WHERE t.TaskId = @taskId";
             using MySqlCommand cmd = new(query, conn);
             cmd.Parameters.AddWithValue("@taskId", taskId);
 
@@ -122,8 +152,10 @@ namespace App_LernPlaner.Repositories
                                         COALESCE(s.Status, t.Status) AS Status,
                                         t.IsRecurring,
                                         t.ClassId,
-                                        t.CreatedBy
+                                        t.CreatedBy,
+                                        COALESCE(NULLIF(TRIM(CONCAT_WS(' ', u.FirstName, u.LastName)), ''), u.Username, 'Unbekannt') AS CreatedByUsername
                                     FROM Tasks t
+                                    LEFT JOIN Users u ON u.UserId = t.CreatedBy
                                     LEFT JOIN ClassMembers cm ON cm.ClassId = t.ClassId AND cm.UserId = @userId
                                     LEFT JOIN Submissions s ON s.TaskId = t.TaskId AND s.UserId = @userId
                                     WHERE cm.UserId IS NOT NULL OR t.CreatedBy = @userId OR t.UserId = @userId
@@ -146,8 +178,23 @@ namespace App_LernPlaner.Repositories
             using MySqlConnection conn = _db.GetConnection();
             await conn.OpenAsync();
 
-            const string query = @"SELECT TaskId, UserId, Title, Subject, Description, Deadline, Priority, Status, IsRecurring, ClassId, CreatedBy
-                                    FROM Tasks WHERE ClassId = @classId ORDER BY Deadline ASC";
+            const string query = @"SELECT
+                                        t.TaskId,
+                                        t.UserId,
+                                        t.Title,
+                                        t.Subject,
+                                        t.Description,
+                                        t.Deadline,
+                                        t.Priority,
+                                        t.Status,
+                                        t.IsRecurring,
+                                        t.ClassId,
+                                        t.CreatedBy,
+                                        COALESCE(NULLIF(TRIM(CONCAT_WS(' ', u.FirstName, u.LastName)), ''), u.Username, 'Unbekannt') AS CreatedByUsername
+                                    FROM Tasks t
+                                    LEFT JOIN Users u ON u.UserId = t.CreatedBy
+                                    WHERE t.ClassId = @classId
+                                    ORDER BY t.Deadline ASC";
             using MySqlCommand cmd = new(query, conn);
             cmd.Parameters.AddWithValue("@classId", classId);
 
@@ -274,6 +321,7 @@ namespace App_LernPlaner.Repositories
                 IsRecurring = Convert.ToBoolean(reader["IsRecurring"]),
                 ClassId = reader["ClassId"] == DBNull.Value ? null : Convert.ToInt32(reader["ClassId"]),
                 CreatedBy = reader["CreatedBy"] == DBNull.Value ? null : Convert.ToInt32(reader["CreatedBy"]),
+                CreatedByUsername = reader["CreatedByUsername"]?.ToString() ?? "Unbekannt",
                 ButtonText = "Öffnen"
             };
         }
