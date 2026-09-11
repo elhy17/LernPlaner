@@ -1,27 +1,51 @@
-﻿using System;
+﻿using App_LernPlaner.Database;
+using App_LernPlaner.Models;
+using App_LernPlaner.ViewModels;
+using MySql.Data.MySqlClient;
+using Nexus_Team;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace App_LernPlaner.Views.Dashboard
 {
-    /// <summary>
-    /// Interaktionslogik für DashboardWindow.xaml
-    /// </summary>
+
     public partial class DashboardWindow : Window
     {
+        private DashboardWindowViewModel _viewModel;
         public DashboardWindow()
         {
             InitializeComponent();
+            _viewModel = new DashboardWindowViewModel();
+            DataContext = _viewModel;
+
         }
+
+        private void Profil_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new App_LernPlaner.Views.ProfilePage());
+        }
+
+        private void MinimizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
+        }
+
+        private void MaximizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState == WindowState.Maximized
+                ? WindowState.Normal
+                : WindowState.Maximized;
+        }
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
     }
 }

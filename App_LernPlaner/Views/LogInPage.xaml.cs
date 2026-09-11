@@ -1,23 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using App_LernPlaner.Models;
 using App_LernPlaner.Services;
-using App_LernPlaner.Views;
 
-namespace Nexus_Team.views
+namespace App_LernPlaner.Views  
 {
-    public partial class LoginPage : Page
+    public partial class LoginPage : Window
     {
         public LoginPage()
         {
@@ -26,34 +13,65 @@ namespace Nexus_Team.views
 
         private void BtnRecover_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new RecoveryPage());
+            var window = new Window
+            {
+                Title = "Passwort wiederherstellen",
+                Width = 1100,
+                Height = 680,
+                MinWidth = 900,
+                MinHeight = 560,
+                Background = System.Windows.Media.Brushes.Transparent,
+                WindowStartupLocation = WindowStartupLocation.CenterScreen,
+                Content = new RecoveryPage()
+            };
+
+            window.ShowDialog();
         }
 
-        private void BtnLogin_Click(object sender, RoutedEventArgs e)
+        private async void BtnLogin_Click(object sender, RoutedEventArgs e)
         {
-            string uN  = txtUsername.Text.ToLower().Trim();
-            string passwordNotHashed = txtPassword.Password;
-            if (string.IsNullOrEmpty(uN) || string.IsNullOrEmpty(passwordNotHashed)) MessageBox.Show("ungutige eingaben!");
+            string username = txtUsername.Text.Trim();
+            string password = txtPassword.Password;
 
-            else 
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
-                var login = new logIn(uN, passwordNotHashed);
+                MessageBox.Show(
+                    "Bitte Benutzername und Passwort eingeben.",
+                    "Ungültige Eingabe",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
 
-                if (login.IsSuccessful == true)
-                {
-
-                    NavigationService.Navigate(new DashBoardPage());
-                }
+                return;
             }
 
+            var result = await new AuthService().TryLoginAsync(username, password);
 
+            if (!result.Success || result.User == null)
+            {
+                MessageBox.Show(
+                    result.Error,
+                    "Anmeldung fehlgeschlagen",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+
+                return;
+            }
+
+            sessionManager.CurrentUser = result.User;
+
+            await new GamificationService().AwardDailyLoginAsync(result.User.UserId);
+
+            Window dashboard = result.User.Role switch
+            {
+                Roles.Admin => new Admin.AdminDashboardWindow(),
+                Roles.Lehrer => new Teacher.TeacherDashboardWindow(),
+                _ => new Dashboard.DashboardWindow()
+            };
+
+            Application.Current.MainWindow = dashboard;
+            dashboard.Show();
+
+            Close();
         }
-
-        private void BtnGoToRegister_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(new RegisterPage());
-        }
-
-       
     }
 }

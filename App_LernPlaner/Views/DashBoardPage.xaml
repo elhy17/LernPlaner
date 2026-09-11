@@ -1,14 +1,345 @@
-﻿<Page x:Class="App_LernPlaner.Views.DashBoardPage"
+﻿<Page x:Class="App_LernPlaner.Views.DashboardPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:App_LernPlaner.Views"
-      mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="DashBoardPage">
+      xmlns:taskViews="clr-namespace:App_LernPlaner.Views.Tasks"
+      Background="#0B1120">
+
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </Page.Resources>
 
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="84"/>
+            <RowDefinition Height="170"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="0"/>
+        </Grid.RowDefinitions>
+
+        <!-- HEADER -->
+        <Border Grid.Row="0">
+            <Grid Margin="10,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0"
+                           Text="{Binding GreettingText}"
+                           Foreground="White"
+                           FontSize="22"
+                           FontWeight="Bold"
+                           VerticalAlignment="Center"/>
+
+                <TextBlock Text="{Binding CurrentDateText}"
+                           Grid.Column="1"
+                           Foreground="#9CA3AF"
+                           VerticalAlignment="Center"
+                           Margin="0,0,20,0"/>
+
+                <Button Grid.Column="2"
+                        Width="40" Height="40"
+                        Background="#1F2937"
+                        BorderBrush="#374151"
+                        BorderThickness="1"
+                        Command="{Binding ShowNotificationsCommand}"
+                        Cursor="Hand">
+                    <TextBlock Text="🔔"
+                               FontSize="16"
+                               Foreground="White"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"/>
+                </Button>
+            </Grid>
+        </Border>
+
+        <!-- STATISTIK KARTEN -->
+        <Grid Margin="10,8,10,18" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Background="#1E1E1E"
+                    Style="{StaticResource DashboardCard}"
+                    Margin="10,0" BorderBrush="#2A2A2A" BorderThickness="1">
+                <StackPanel>
+                    <TextBlock Text="Offene Aufgaben" Foreground="#A1A1AA" FontSize="13"/>
+                    <TextBlock Text="{Binding OffeneAufgaben}" Foreground="White"
+                               FontSize="28" FontWeight="Bold" Margin="0,5,0,0"/>
+                    <TextBlock Text="{Binding FaelligDieseWoche, StringFormat={}{0} fällig diese Woche}" Foreground="#71717A" FontSize="12"/>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="1" Background="#1E1E1E"
+                    Style="{StaticResource DashboardCard}"
+                    Margin="10,0" BorderBrush="#2A2A2A" BorderThickness="1">
+                <StackPanel>
+                    <TextBlock Text="Abgegeben" Foreground="#A1A1AA"/>
+                    <TextBlock Text="{Binding Abgegeben}" Foreground="White"
+                               FontSize="28" FontWeight="Bold" Margin="0,5,0,0"/>
+                    <TextBlock Text="davon 16 pünktlich" Foreground="#71717A" FontSize="12"/>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="2" Background="#1E1E1E"
+                    Style="{StaticResource DashboardCard}"
+                    Margin="10,0" BorderBrush="#2A2A2A" BorderThickness="1">
+                <StackPanel>
+                    <TextBlock Text="Durchschnittsnote" Foreground="#A1A1AA"/>
+                    <TextBlock Text="{Binding Durchschnittsnote}" Foreground="White"
+                               FontSize="28" FontWeight="Bold" Margin="0,5,0,0"/>
+                    <TextBlock Text="letzten 30 Tage" Foreground="#71717A" FontSize="12"/>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="3" Background="#1E1E1E"
+                    Style="{StaticResource DashboardCard}"
+                    Margin="10,0" BorderBrush="#2A2A2A" BorderThickness="1">
+                <StackPanel>
+                    <TextBlock Text="XP Gesamt" Foreground="#A1A1AA"/>
+                    <TextBlock Text="{Binding XpGesamt}" Foreground="White"
+                               FontSize="28" FontWeight="Bold" Margin="0,5,0,0"/>
+                    <TextBlock Text="Rang 3 in der Klasse" Foreground="#71717A" FontSize="12"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- AUFGABEN LISTE -->
+        <Grid Grid.Row="2" Margin="10,0,10,18">
+            <Border Background="{StaticResource CardBrush}"
+                    CornerRadius="12"
+                    Padding="20"
+                    BorderBrush="#1F2937"
+                    BorderThickness="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="Aktuelle Aufgaben"
+                               Foreground="White" FontSize="17"
+                               FontWeight="SemiBold" Margin="0,0,0,20"/>
+
+                    <DataGrid Grid.Row="1"
+          ItemsSource="{Binding Aufgaben}"
+          SelectedItem="{Binding SelectedTask, Mode=TwoWay}"
+          AutoGenerateColumns="False"
+          HeadersVisibility="Column"
+          GridLinesVisibility="None"
+          Background="Transparent"
+          BorderThickness="0"
+          FontSize="13"
+          RowHeight="58"
+          ColumnHeaderHeight="38"
+          IsReadOnly="True"
+          CanUserAddRows="False"
+          CanUserDeleteRows="False"
+          CanUserResizeRows="False"
+          CanUserReorderColumns="False"
+          SelectionMode="Single"
+          SelectionUnit="FullRow"
+          ScrollViewer.HorizontalScrollBarVisibility="Auto"
+          ScrollViewer.VerticalScrollBarVisibility="Auto">
+
+                        <DataGrid.Resources>
+                            <Style x:Key="GridText" TargetType="TextBlock">
+                                <Setter Property="Foreground" Value="#B7C6DD"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                            </Style>
+
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="Background" Value="#111827"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                                <Setter Property="BorderBrush" Value="#253044"/>
+                                <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                            </Style>
+
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="Padding" Value="8,0"/>
+                                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                            </Style>
+
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#1A2538"/>
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="#20345A"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+
+                            <Style TargetType="ScrollBar">
+                                <Setter Property="Width" Value="10"/>
+                                <Setter Property="MinWidth" Value="10"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ScrollBar">
+                                            <Grid Background="Transparent">
+                                                <Track x:Name="PART_Track"
+                           IsDirectionReversed="True">
+                                                    <Track.DecreaseRepeatButton>
+                                                        <RepeatButton Opacity="0"
+                                          IsHitTestVisible="False"/>
+                                                    </Track.DecreaseRepeatButton>
+
+                                                    <Track.Thumb>
+                                                        <Thumb>
+                                                            <Thumb.Template>
+                                                                <ControlTemplate TargetType="Thumb">
+                                                                    <Border x:Name="ThumbBorder"
+                                                Background="#334155"
+                                                CornerRadius="5"
+                                                Margin="2"/>
+                                                                    <ControlTemplate.Triggers>
+                                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                                            <Setter TargetName="ThumbBorder"
+                                                        Property="Background"
+                                                        Value="#475569"/>
+                                                                        </Trigger>
+
+                                                                        <Trigger Property="IsDragging" Value="True">
+                                                                            <Setter TargetName="ThumbBorder"
+                                                        Property="Background"
+                                                        Value="#64748B"/>
+                                                                        </Trigger>
+                                                                    </ControlTemplate.Triggers>
+                                                                </ControlTemplate>
+                                                            </Thumb.Template>
+                                                        </Thumb>
+                                                    </Track.Thumb>
+
+                                                    <Track.IncreaseRepeatButton>
+                                                        <RepeatButton Opacity="0"
+                                          IsHitTestVisible="False"/>
+                                                    </Track.IncreaseRepeatButton>
+                                                </Track>
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </DataGrid.Resources>
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Aufgabe"
+                            Binding="{Binding Titel}"
+                            Width="2*"
+                            MinWidth="190">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock" BasedOn="{StaticResource GridText}">
+                                        <Setter Property="Foreground" Value="White"/>
+                                        <Setter Property="FontWeight" Value="SemiBold"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <DataGridTextColumn Header="Fach"
+                            Binding="{Binding Subject}"
+                            Width="*"
+                            MinWidth="120"
+                            ElementStyle="{StaticResource GridText}"/>
+
+                            <DataGridTextColumn Header="Deadline"
+                            Binding="{Binding Deadline, StringFormat={}{0:dd.MM.yyyy}}"
+                            Width="*"
+                            MinWidth="115"
+                            ElementStyle="{StaticResource GridText}"/>
+
+                            <DataGridTextColumn Header="Priorität"
+                            Binding="{Binding PriorityName}"
+                            Width="*"
+                            MinWidth="100"
+                            ElementStyle="{StaticResource GridText}"/>
+
+                            <DataGridTemplateColumn Header="Status"
+                                Width="1.2*"
+                                MinWidth="155">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Border Width="130" Height="30"
+                            Padding="8,4"
+                            CornerRadius="10"
+                            HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="Background" Value="#374151"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Status}" Value="0">
+                                                            <Setter Property="Background" Value="#D97706"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Status}" Value="1">
+                                                            <Setter Property="Background" Value="#2563EB"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Status}" Value="2">
+                                                            <Setter Property="Background" Value="#16A34A"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+
+                                            <TextBlock Text="{Binding StatusName}"
+                                   Foreground="White"
+                                   HorizontalAlignment="Center"
+                                   FontWeight="SemiBold"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTemplateColumn Header="Aktion"
+                                Width="160"
+                                MinWidth="150">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="{Binding ButtonText}"
+                            Width="120"
+                            Height="36"
+                            Cursor="Hand"
+                            Background="#2563EB"
+                            Foreground="White"
+                            BorderThickness="0"
+                            Command="{Binding DataContext.OpenTaskCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                            CommandParameter="{Binding}">
+                                            <Button.Template>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border Background="{TemplateBinding Background}"
+                                        CornerRadius="8">
+                                                        <ContentPresenter HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- BENACHRICHTIGUNGEN -->
+       
+
+        <taskViews:TaskDetailView Grid.RowSpan="4"
+                                  Panel.ZIndex="20"
+                                  Visibility="{Binding IsTaskDetailsOpen, Converter={StaticResource BooleanToVisibilityConverter}}"/>
     </Grid>
 </Page>

@@ -1,15 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using App_LernPlaner.Models;
 
 namespace App_LernPlaner.Services
 {
-    internal static class sessionManager
+    /// <summary>Hält den aktuell eingeloggten Benutzer für die Dauer der Anwendungslaufzeit.</summary>
+    public static class sessionManager
     {
-        public static int CurrentUserId {  get; set; }
+        public static User? CurrentUser { get; set; }
 
+        public static int CurrentUserId => CurrentUser?.UserId ?? 0;
 
+        public static bool IsLoggedIn => CurrentUser != null;
+
+        public static void Logout()
+        {
+            CurrentUser = null;
+        }
     }
 }
