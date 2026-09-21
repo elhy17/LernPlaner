@@ -10,7 +10,7 @@ namespace App_LernPlaner.Models
     {
          public int NotifId { get; set; }
          public int UserId { get; set; }
-        public string Message { get; set; }  // z.b "Deadline Morgen"
+        public string Message { get; set; }
         public DateTime TriggerAt { get; set; }
 
         public bool IsRead { get; set; }
