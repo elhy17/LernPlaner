@@ -1,215 +1,135 @@
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Threading.Tasks;
-using App_LernPlaner.Database;
 using App_LernPlaner.Models;
-using MySql.Data.MySqlClient;
+using LernPlaner.Core;
+using App_LernPlaner.Remote;
 
-namespace App_LernPlaner.Repositories
+namespace App_LernPlaner.Repositories;
+public class UserRepository
 {
-    public class UserRepository
+    public async Task<User?> FindByUsernameAsync(string username, CancellationToken cancellationToken = default)
     {
-        private readonly db_verbindung _db = new();
+        if (RemoteClient.Current != null)
+            return await RemoteClient.Current.CallAsync<User?>("User.FindByUsernameAsync", new object? [] { username }, cancellationToken);
+        await using var db = DatabaseSettings.Create();
+        return await new LernPlaner.Core.Repositories.UserRepository(db).FindByUsernameAsync(username, cancellationToken);
+    }
 
-        public async Task<User?> FindByUsernameAsync(string username)
+    public async Task<User?> FindByEmailAsync(string email, CancellationToken cancellationToken = default)
+    {
+        if (RemoteClient.Current != null)
+            return await RemoteClient.Current.CallAsync<User?>("User.FindByEmailAsync", new object? [] { email }, cancellationToken);
+        await using var db = DatabaseSettings.Create();
+        return await new LernPlaner.Core.Repositories.UserRepository(db).FindByEmailAsync(email, cancellationToken);
+    }
+
+    public async Task<User?> GetByIdAsync(int userId, CancellationToken cancellationToken = default)
+    {
+        if (RemoteClient.Current != null)
+            return await RemoteClient.Current.CallAsync<User?>("User.GetByIdAsync", new object? [] { userId }, cancellationToken);
+        await using var db = DatabaseSettings.Create();
+        return await new LernPlaner.Core.Repositories.UserRepository(db).GetByIdAsync(userId, cancellationToken);
+    }
+
+    public async Task<List<User>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        if (RemoteClient.Current != null)
+            return await RemoteClient.Current.CallAsync<List<User>>("User.GetAllAsync", new object? [] { }, cancellationToken);
+        await using var db = DatabaseSettings.Create();
+        return await new LernPlaner.Core.Repositories.UserRepository(db).GetAllAsync(cancellationToken);
+    }
+
+    public async Task<bool> ExistsAsync(string username, string email, CancellationToken cancellationToken = default)
+    {
+        if (RemoteClient.Current != null)
+            return await RemoteClient.Current.CallAsync<bool>("User.ExistsAsync", new object? [] { username, email }, cancellationToken);
+        await using var db = DatabaseSettings.Create();
+        return await new LernPlaner.Core.Repositories.UserRepository(db).ExistsAsync(username, email, cancellationToken);
+    }
+
+    public async Task<int> InsertAsync(string username, string passwordHash, string email, string role, CancellationToken cancellationToken = default)
+    {
+        if (RemoteClient.Current != null)
+            return await RemoteClient.Current.CallAsync<int>("User.InsertAsync", new object? [] { username, passwordHash, email, role }, cancellationToken);
+        await using var db = DatabaseSettings.Create();
+        return await new LernPlaner.Core.Repositories.UserRepository(db).InsertAsync(username, passwordHash, email, role, cancellationToken);
+    }
+
+    public async Task UpdatePasswordAsync(int userId, string newHash, CancellationToken cancellationToken = default)
+    {
+        if (RemoteClient.Current != null)
         {
-            using var conn = _db.GetConnection();
-            await conn.OpenAsync();
-
-            const string query = "SELECT * FROM Users WHERE Username = @u LIMIT 1";
-            using var cmd = new MySqlCommand(query, conn);
-            cmd.Parameters.AddWithValue("@u", username);
-
-            using var reader = await cmd.ExecuteReaderAsync();
-            return await reader.ReadAsync() ? Map(reader) : null;
+            await RemoteClient.Current.CallAsync("User.UpdatePasswordAsync", new object? [] { userId, newHash }, cancellationToken);
+            return;
         }
 
-        public async Task<User?> FindByEmailAsync(string email)
+        await using var db = DatabaseSettings.Create();
+        await new LernPlaner.Core.Repositories.UserRepository(db).UpdatePasswordAsync(userId, newHash, cancellationToken);
+    }
+
+    public async Task UpdateRoleAsync(int userId, string role, CancellationToken cancellationToken = default)
+    {
+        if (RemoteClient.Current != null)
         {
-            using var conn = _db.GetConnection();
-            await conn.OpenAsync();
-
-            const string query = "SELECT * FROM Users WHERE Email = @e LIMIT 1";
-            using var cmd = new MySqlCommand(query, conn);
-            cmd.Parameters.AddWithValue("@e", email);
-
-            using var reader = await cmd.ExecuteReaderAsync();
-            return await reader.ReadAsync() ? Map(reader) : null;
+            await RemoteClient.Current.CallAsync("User.UpdateRoleAsync", new object? [] { userId, role }, cancellationToken);
+            return;
         }
 
-        public async Task<User?> GetByIdAsync(int userId)
+        await using var db = DatabaseSettings.Create();
+        await new LernPlaner.Core.Repositories.UserRepository(db).UpdateRoleAsync(userId, role, cancellationToken);
+    }
+
+    public async Task UpdateActiveAsync(int userId, bool isActive, CancellationToken cancellationToken = default)
+    {
+        if (RemoteClient.Current != null)
         {
-            using var conn = _db.GetConnection();
-            await conn.OpenAsync();
-
-            const string query = "SELECT * FROM Users WHERE UserId = @id LIMIT 1";
-            using var cmd = new MySqlCommand(query, conn);
-            cmd.Parameters.AddWithValue("@id", userId);
-
-            using var reader = await cmd.ExecuteReaderAsync();
-            return await reader.ReadAsync() ? Map(reader) : null;
+            await RemoteClient.Current.CallAsync("User.UpdateActiveAsync", new object? [] { userId, isActive }, cancellationToken);
+            return;
         }
 
-        public async Task<List<User>> GetAllAsync()
+        await using var db = DatabaseSettings.Create();
+        await new LernPlaner.Core.Repositories.UserRepository(db).UpdateActiveAsync(userId, isActive, cancellationToken);
+    }
+
+    public async Task UpdateProfileAsync(int userId, string firstName, string lastName, string? profilePicturePath = null, CancellationToken cancellationToken = default)
+    {
+        if (RemoteClient.Current != null)
         {
-            var result = new List<User>();
-            using var conn = _db.GetConnection();
-            await conn.OpenAsync();
-
-            using var cmd = new MySqlCommand("SELECT * FROM Users ORDER BY Username", conn);
-            using var reader = await cmd.ExecuteReaderAsync();
-            while (await reader.ReadAsync())
-                result.Add(Map(reader));
-
-            return result;
+            await RemoteClient.Current.CallAsync("User.UpdateProfileAsync", new object? [] { userId, firstName, lastName, profilePicturePath }, cancellationToken);
+            return;
         }
 
-        public async Task<bool> ExistsAsync(string username, string email)
+        await using var db = DatabaseSettings.Create();
+        await new LernPlaner.Core.Repositories.UserRepository(db).UpdateProfileAsync(userId, firstName, lastName, profilePicturePath, cancellationToken);
+    }
+
+    public async Task AddXpAsync(int userId, int amount, CancellationToken cancellationToken = default)
+    {
+        if (RemoteClient.Current != null)
         {
-            using var conn = _db.GetConnection();
-            await conn.OpenAsync();
-
-            const string query = "SELECT COUNT(*) FROM Users WHERE Username = @u OR Email = @e";
-            using var cmd = new MySqlCommand(query, conn);
-            cmd.Parameters.AddWithValue("@u", username);
-            cmd.Parameters.AddWithValue("@e", email);
-
-            return Convert.ToInt32(await cmd.ExecuteScalarAsync()) > 0;
+            await RemoteClient.Current.CallAsync("User.AddXpAsync", new object? [] { userId, amount }, cancellationToken);
+            return;
         }
 
-        public async Task<int> InsertAsync(string username, string passwordHash, string email, string role)
+        await using var db = DatabaseSettings.Create();
+        await new LernPlaner.Core.Repositories.UserRepository(db).AddXpAsync(userId, amount, cancellationToken);
+    }
+
+    public async Task UpdateUserProfileAsync(UserProfile profile, CancellationToken cancellationToken = default)
+    {
+        if (RemoteClient.Current != null)
         {
-            using var conn = _db.GetConnection();
-            await conn.OpenAsync();
-
-            const string query = @"INSERT INTO Users (Username, PasswordHash, Email, Role, ProfilePicturePath, XPPoints, CreatedAt, IsActive)
-                                    VALUES (@u, @p, @e, @r, 'default.png', 0, @created, 1)";
-            using var cmd = new MySqlCommand(query, conn);
-            cmd.Parameters.AddWithValue("@u", username);
-            cmd.Parameters.AddWithValue("@p", passwordHash);
-            cmd.Parameters.AddWithValue("@e", email);
-            cmd.Parameters.AddWithValue("@r", role);
-            cmd.Parameters.AddWithValue("@created", DateTime.Now);
-
-            await cmd.ExecuteNonQueryAsync();
-            return (int)cmd.LastInsertedId;
+            await RemoteClient.Current.CallAsync("User.UpdateUserProfileAsync", new object? [] { profile }, cancellationToken);
+            return;
         }
 
-        public async Task UpdatePasswordAsync(int userId, string newHash)
-        {
-            using var conn = _db.GetConnection();
-            await conn.OpenAsync();
+        await using var db = DatabaseSettings.Create();
+        await new LernPlaner.Core.Repositories.UserRepository(db).UpdateUserProfileAsync(profile, cancellationToken);
+    }
 
-            using var cmd = new MySqlCommand("UPDATE Users SET PasswordHash = @p WHERE UserId = @id", conn);
-            cmd.Parameters.AddWithValue("@p", newHash);
-            cmd.Parameters.AddWithValue("@id", userId);
-            await cmd.ExecuteNonQueryAsync();
-        }
-
-        public async Task UpdateRoleAsync(int userId, string role)
-        {
-            using var conn = _db.GetConnection();
-            await conn.OpenAsync();
-
-            using var cmd = new MySqlCommand("UPDATE Users SET Role = @r WHERE UserId = @id", conn);
-            cmd.Parameters.AddWithValue("@r", role);
-            cmd.Parameters.AddWithValue("@id", userId);
-            await cmd.ExecuteNonQueryAsync();
-        }
-
-        public async Task UpdateActiveAsync(int userId, bool isActive)
-        {
-            using var conn = _db.GetConnection();
-            await conn.OpenAsync();
-
-            using var cmd = new MySqlCommand("UPDATE Users SET IsActive = @a WHERE UserId = @id", conn);
-            cmd.Parameters.AddWithValue("@a", isActive);
-            cmd.Parameters.AddWithValue("@id", userId);
-            await cmd.ExecuteNonQueryAsync();
-        }
-
-        // FA-06: Benutzerprofil bearbeiten (Name, Avatar)
-        public async Task UpdateProfileAsync(int userId, string firstName, string lastName, string? profilePicturePath = null)
-        {
-            using var conn = _db.GetConnection();
-            await conn.OpenAsync();
-
-            string query = "UPDATE Users SET FirstName = @f, LastName = @l" +
-                            (profilePicturePath != null ? ", ProfilePicturePath = @p" : "") +
-                            " WHERE UserId = @id";
-
-            using var cmd = new MySqlCommand(query, conn);
-            cmd.Parameters.AddWithValue("@f", firstName);
-            cmd.Parameters.AddWithValue("@l", lastName);
-            if (profilePicturePath != null) cmd.Parameters.AddWithValue("@p", profilePicturePath);
-            cmd.Parameters.AddWithValue("@id", userId);
-            await cmd.ExecuteNonQueryAsync();
-        }
-
-        public async Task AddXpAsync(int userId, int amount)
-        {
-            using var conn = _db.GetConnection();
-            await conn.OpenAsync();
-
-            using var cmd = new MySqlCommand("UPDATE Users SET XPPoints = XPPoints + @amt WHERE UserId = @id", conn);
-            cmd.Parameters.AddWithValue("@amt", amount);
-            cmd.Parameters.AddWithValue("@id", userId);
-            await cmd.ExecuteNonQueryAsync();
-        }
-
-        // FA-06: Profilbearbeitung über das UserProfile-DTO (ProfileViewModel)
-        public async Task UpdateUserProfileAsync(UserProfile profile)
-        {
-            using MySqlConnection conn = _db.GetConnection();
-            await conn.OpenAsync();
-
-            string query = "UPDATE Users SET FirstName=@firstName , LastName=@lastName, Email=@email WHERE UserId = @userId; ";
-
-            using MySqlCommand cmd = new MySqlCommand(query, conn);
-            cmd.Parameters.AddWithValue("@userId", profile.UserId);
-            cmd.Parameters.AddWithValue("@firstName", profile.FirstName);
-            cmd.Parameters.AddWithValue("@lastName", profile.LastName);
-            cmd.Parameters.AddWithValue("@email", profile.Email);
-
-            await cmd.ExecuteNonQueryAsync();
-        }
-
-        // Behalten für Repositories/ViewModels, die weiterhin das ältere UserProfile-DTO erwarten.
-        public async Task<UserProfile?> GetUserProfileByIdAsync(int userId)
-        {
-            var u = await GetByIdAsync(userId);
-            if (u == null) return null;
-
-            return new UserProfile
-            {
-                UserId = u.UserId,
-                Username = u.UserName,
-                Email = u.Email,
-                Role = u.Role,
-                ProfilePicturePath = u.ProfilePicture,
-                XPPoints = u.XPPoints,
-                CreatedAt = u.CreatedAt,
-                FirstName = u.FirstName ?? string.Empty,
-                LastName = u.LastName ?? string.Empty,
-                ClassName = u.ClassName ?? string.Empty
-            };
-        }
-
-        private static User Map(IDataRecord r) => new()
-        {
-            UserId = Convert.ToInt32(r["UserId"]),
-            UserName = r["Username"] as string ?? string.Empty,
-            PasswordHash = r["PasswordHash"] as string ?? string.Empty,
-            Email = r["Email"] as string ?? string.Empty,
-            Role = r["Role"] as string ?? Roles.Schueler,
-            ProfilePicture = r["ProfilePicturePath"] as string ?? "default.png",
-            XPPoints = r["XPPoints"] == DBNull.Value ? 0 : Convert.ToInt32(r["XPPoints"]),
-            CreatedAt = r["CreatedAt"] == DBNull.Value ? DateTime.Now : Convert.ToDateTime(r["CreatedAt"]),
-            IsActive = r["IsActive"] == DBNull.Value || Convert.ToBoolean(r["IsActive"]),
-            FirstName = r["FirstName"] as string,
-            LastName = r["LastName"] as string,
-            ClassName = r["ClassName"] as string
-        };
+    public async Task<UserProfile?> GetUserProfileByIdAsync(int userId, CancellationToken cancellationToken = default)
+    {
+        if (RemoteClient.Current != null)
+            return await RemoteClient.Current.CallAsync<UserProfile?>("User.GetUserProfileByIdAsync", new object? [] { userId }, cancellationToken);
+        await using var db = DatabaseSettings.Create();
+        return await new LernPlaner.Core.Repositories.UserRepository(db).GetUserProfileByIdAsync(userId, cancellationToken);
     }
 }

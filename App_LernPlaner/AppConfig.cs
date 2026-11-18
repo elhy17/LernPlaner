@@ -1,11 +1,6 @@
-namespace App_LernPlaner
+namespace App_LernPlaner;
+public static class AppConfig
 {
-    /// <summary>
-    /// Zentraler Schalter zwischen Mock-Daten (Entwicklung ohne DB-Zugriff)
-    /// und der echten MySQL-Datenbank (mysql.pb.bib.de).
-    /// </summary>
-    public static class AppConfig
-    {
-        public static bool UseMockData = false;
-    }
+    // Explicit offline demo mode; never used by the API.
+    public static bool UseMockData = false;
 }

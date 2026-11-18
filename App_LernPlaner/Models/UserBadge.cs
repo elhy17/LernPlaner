@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +13,6 @@ namespace App_LernPlaner.Models
         public DateTime DateEarned { get; set; }
 
         // Navigation properties
-        public Badge Badge { get; set; }
+        public Badge Badge { get; set; } = null!;
     }
 }

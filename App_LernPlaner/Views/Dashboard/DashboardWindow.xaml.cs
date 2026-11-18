@@ -1,7 +1,7 @@
-﻿using App_LernPlaner.Database;
+
 using App_LernPlaner.Models;
 using App_LernPlaner.ViewModels;
-using MySql.Data.MySqlClient;
+
 using Nexus_Team;
 using System;
 using System.Collections.Generic;

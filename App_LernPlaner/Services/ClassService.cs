@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -78,10 +78,10 @@ namespace App_LernPlaner.Services
         private async Task<string> GenerateUniqueJoinCodeAsync()
         {
             const string chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-            var rnd = new Random();
+
             for (int attempt = 0; attempt < 20; attempt++)
             {
-                string code = new string(Enumerable.Range(0, 7).Select(_ => chars[rnd.Next(chars.Length)]).ToArray());
+                string code = new string(Enumerable.Range(0, 7).Select(_ => chars[System.Security.Cryptography.RandomNumberGenerator.GetInt32(chars.Length)]).ToArray());
                 if (await _classes.GetByJoinCodeAsync(code) == null) return code;
             }
             throw new InvalidOperationException("Konnte keinen eindeutigen Einladungscode erzeugen.");
@@ -90,6 +90,11 @@ namespace App_LernPlaner.Services
         // FA-09: Schüler tritt per Code bei
         public async Task<(bool Success, string Error)> TryJoinClassAsync(string joinCode, int userId)
         {
+            if (!AppConfig.UseMockData && Remote.RemoteClient.Current is { } remote)
+            {
+                await remote.PostAsync<bool>("classes/join",new LernPlaner.Core.JoinRequest(joinCode,userId));
+                return (true, string.Empty);
+            }
             joinCode = joinCode.Trim();
 
             if (AppConfig.UseMockData)

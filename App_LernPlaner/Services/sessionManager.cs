@@ -11,9 +11,17 @@ namespace App_LernPlaner.Services
 
         public static bool IsLoggedIn => CurrentUser != null;
 
-        public static void Logout()
+        public static async System.Threading.Tasks.Task LogoutAsync()
         {
-            CurrentUser = null;
+            try
+            {
+                if (Remote.RemoteClient.Current is { } remote) await remote.LogoutAsync();
+            }
+            catch (System.Exception ex) when (ex is System.InvalidOperationException or System.TimeoutException or System.UnauthorizedAccessException)
+            {
+                System.Diagnostics.Debug.WriteLine("Remote logout unavailable; local session cleared.");
+            }
+            finally { Remote.RemoteClient.Current?.ClearSession(); CurrentUser = null; }
         }
     }
 }

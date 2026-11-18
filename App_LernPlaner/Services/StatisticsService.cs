@@ -80,6 +80,8 @@ namespace App_LernPlaner.Services
         // FA-28: Lehrer sehen Klassenstatistiken (Abgabequote)
         public async Task<ClassStatistics> GetClassStatisticsAsync(Class cls)
         {
+            if (!AppConfig.UseMockData && Remote.RemoteClient.Current is { } remote)
+                return await remote.PostAsync<ClassStatistics>("classes/statistics",cls.ClassId);
             var students = await _classService.GetMembersAsync(cls.ClassId, role: 2);
 
             var allTasks = (await _taskService.GetTasksByClassIdAsync(cls.ClassId));

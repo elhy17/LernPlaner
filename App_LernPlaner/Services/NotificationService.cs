@@ -36,6 +36,7 @@ namespace App_LernPlaner.Services
 
         public async Task NotifyAsync(int userId, string message)
         {
+            if (!AppConfig.UseMockData && Remote.RemoteClient.Current != null && userId != sessionManager.CurrentUserId) return;
             if (AppConfig.UseMockData)
             {
                 MockDatabase.Notifications.Add(new Notification { NotifId = MockDatabase.NextNotificationId(), UserId = userId, Message = message, TriggerAt = DateTime.Now, IsRead = false });

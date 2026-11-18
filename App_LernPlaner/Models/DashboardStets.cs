@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +10,7 @@ namespace App_LernPlaner.Models
     {
         public int OffeneAufgaben { get; set; }
         public int Abgegeben { get; set; }
-        public string Durchschnittsnote { get; set; }
+        public string Durchschnittsnote { get; set; } = string.Empty;
         public int XpGesamt { get; set; }
     }
 }

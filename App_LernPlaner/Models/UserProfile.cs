@@ -20,7 +20,7 @@ namespace App_LernPlaner.Models
         public string LastName { get; set; } = string.Empty;
         public string ClassName { get; set; } = string.Empty;
 
-        public string ProfilePicturePath {  get; set; } = string.Empty;
+        public string ProfilePicturePath { get; set; } = string.Empty;
         public int XPPoints { get; set; }
         public DateTime CreatedAt { get; set; }
 
@@ -30,15 +30,15 @@ namespace App_LernPlaner.Models
         {
             get
             {
-                string first = string.IsNullOrWhiteSpace(FirstName) ? "" : FirstName.Substring(0,1).ToUpper();
-                string last = string.IsNullOrWhiteSpace(LastName) ? "" : LastName.Substring(0,1).ToUpper();
+                string first = string.IsNullOrWhiteSpace(FirstName) ? "" : FirstName.Substring(0, 1).ToUpper();
+                string last = string.IsNullOrWhiteSpace(LastName) ? "" : LastName.Substring(0, 1).ToUpper();
 
                 if (!string.IsNullOrWhiteSpace(first + last))
                 {
                     return first + last;
                 }
 
-                return Username.Length >= 2 ? Username.Substring(0,2).ToUpper() : "U";
+                return Username.Length >= 2 ? Username.Substring(0, 2).ToUpper() : "U";
             }
         }
 

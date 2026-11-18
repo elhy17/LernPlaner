@@ -81,7 +81,7 @@ namespace App_LernPlaner.ViewModels
             EditProfileCommand = new RelayCommand(EditProfile);
             ChangePasswordCommand = new RelayCommand(ChangePassword);
             CancelChangePasswordCommand = new RelayCommand(CancelChangePassword);
-            LogoutCommand = new RelayCommand(Logout);
+            LogoutCommand = new AsyncRelayCommand(LogoutAsync);
 
             CancelEditProfileCommand = new RelayCommand(CancelEditProfile);
             SaveProfileCommand = new AsyncRelayCommand(SaveProfileAsync);
@@ -239,14 +239,14 @@ namespace App_LernPlaner.ViewModels
         }
 
         // FA-02: ausloggen - beendet die Session und kehrt zur Anmeldeseite zurück.
-        private void Logout(object? parameter)
+        private async Task LogoutAsync()
         {
             var result = MessageBox.Show("Möchtest du dich wirklich abmelden?", "Abmelden", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result != MessageBoxResult.Yes) return;
 
             var oldWindow = Application.Current.MainWindow;
 
-            sessionManager.Logout();
+            await sessionManager.LogoutAsync();
 
             var login = new LoginPage();
             Application.Current.MainWindow = login;

@@ -14,6 +14,7 @@ namespace App_LernPlaner.Models
     {
         public int UserId { get; set; }
         public string UserName { get; set; } = string.Empty;
+        [System.Text.Json.Serialization.JsonIgnore]
         public string PasswordHash { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Role { get; set; } = Roles.Schueler;

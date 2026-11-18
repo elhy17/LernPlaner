@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,12 +10,12 @@ namespace App_LernPlaner.Models
     {
         public int TaskId { get; set; }
         public int UserId { get; set; }
-        public string ButtonText { get; set; } 
+        public string ButtonText { get; set; } = string.Empty;
         public int? ClassId { get; set; }
         public int? CreatedBy { get; set; }
         public string CreatedByUsername { get; set; } = "Unbekannt";
-        public string Titel { get; set; }
-        public string Subject { get; set; }
+        public string Titel { get; set; } = string.Empty;
+        public string Subject { get; set; } = string.Empty;
         public DateTime Deadline { get; set; }
         public byte Priority { get; set; } // Wenn 1= Niedrig, 2= Mittel, 3 = Hoch
         public byte Status { get; set; } // 0 = Offen, 1 = In Bearbeitung, 2 = Erledigt

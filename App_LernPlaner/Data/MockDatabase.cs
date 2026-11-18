@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using App_LernPlaner.Models;
@@ -143,7 +143,7 @@ namespace App_LernPlaner.Data
 
             UserBadges.Add(new UserBadge { UserId = max.UserId, BadgeId = Badges[0].BadgeId, DateEarned = DateTime.Now.AddDays(-8), Badge = Badges[0] });
 
-            StudySessions.Add(new StudySession { SessionId = NextStudySessionId(), UserId = max.UserId, TaskId = (uint)mathTask.TaskId, StartTime = DateTime.Now.AddDays(-1).AddHours(-2), DurationMin = 90, Notes = "Kapitel 3 wiederholt" });
+            StudySessions.Add(new StudySession { SessionId = NextStudySessionId(), UserId = max.UserId, TaskId = mathTask.TaskId, StartTime = DateTime.Now.AddDays(-1).AddHours(-2), DurationMin = 90, Notes = "Kapitel 3 wiederholt" });
             StudySessions.Add(new StudySession { SessionId = NextStudySessionId(), UserId = max.UserId, TaskId = 0, StartTime = DateTime.Now.AddDays(-3), DurationMin = 45, Notes = "Vokabeln geübt" });
         }
 

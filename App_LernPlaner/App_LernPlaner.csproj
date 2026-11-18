@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <DefaultItemExcludes>$(DefaultItemExcludes);artifacts/**;src/**;tests/**</DefaultItemExcludes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,11 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.27" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.27" />
-    <PackageReference Include="MySql.Data" Version="9.0.0" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
+    <Compile Remove="src/**/*.cs;tests/**/*.cs;Models/*.cs" />
+    <Compile Include="Models/CalendarDay.cs" />
+    <Page Remove="src/**/*.xaml;tests/**/*.xaml" />
+    <ProjectReference Include="src/LernPlaner.Core/LernPlaner.Core.csproj" />
   </ItemGroup>
-
 </Project>

@@ -12,7 +12,7 @@ namespace App_LernPlaner.Services
     /// <summary>
     /// Login / Registrierung / Passwort-Reset (FA-01 bis FA-04).
     /// Arbeitet je nach AppConfig.UseMockData entweder auf den In-Memory
-    /// Mock-Daten oder direkt gegen die MySQL Datenbank.
+    /// Mock-Daten oder über EF Core oder die HTTPS API.
     /// </summary>
     public class AuthService
     {
@@ -20,6 +20,11 @@ namespace App_LernPlaner.Services
 
         public async Task<AuthResult> TryLoginAsync(string username, string password)
         {
+            if (!AppConfig.UseMockData && Remote.RemoteClient.Current is { } remote)
+            {
+                var login = await remote.LoginAsync(username, password);
+                return login == null ? new AuthResult(false, null, "Anmeldung fehlgeschlagen.") : new AuthResult(true, login.User, "");
+            }
             username = (username ?? string.Empty).Trim();
 
             User? found = AppConfig.UseMockData
@@ -46,6 +51,13 @@ namespace App_LernPlaner.Services
         /// </summary>
         public async Task<AuthResult> TryRegisterAsync(string username, string password, string email, string role)
         {
+            if (!AppConfig.UseMockData && Remote.RemoteClient.Current is { } remote)
+            {
+                var user = await remote.PostAsync<User>("auth/register", new LernPlaner.Core.RegisterRequest(username,password,email,role));
+                return new AuthResult(true,user,"");
+            }
+            LernPlaner.Core.Input.Password(password);
+
             username = (username ?? string.Empty).Trim();
             email = (email ?? string.Empty).Trim();
 
@@ -90,6 +102,10 @@ namespace App_LernPlaner.Services
         /// </summary>
         public async Task<(bool Success, User? User, string TempPasswordOrError)> TryResetPasswordAsync(string email)
         {
+            // The legacy unauthenticated reset displayed a new password to anyone knowing an email.
+            // A verified email delivery/token flow is not configured, so fail closed in real modes.
+            if (!AppConfig.UseMockData) return (false,null,"Bitte den Administrator um eine sichere Passwort-Zurücksetzung bitten.");
+
             email = (email ?? string.Empty).Trim();
 
             User? found = AppConfig.UseMockData
@@ -116,6 +132,17 @@ namespace App_LernPlaner.Services
         /// </summary>
         public async Task<(bool Success, string Error)> TryChangePasswordAsync(int userId, string currentPassword, string newPassword)
         {
+            if (!AppConfig.UseMockData && Remote.RemoteClient.Current is { } remote)
+            {
+                await remote.PostAsync<bool>("auth/password",new LernPlaner.Core.PasswordRequest(userId,currentPassword,newPassword));
+                // All old tokens were revoked. Renew this client session using the new password.
+                var renewed = await remote.LoginAsync(sessionManager.CurrentUser?.UserName ?? "",newPassword);
+                if (renewed == null) return (false,"Bitte erneut anmelden.");
+                sessionManager.CurrentUser = renewed.User;
+                return (true,"");
+            }
+            LernPlaner.Core.Input.Password(newPassword);
+
             if (string.IsNullOrWhiteSpace(newPassword) || newPassword.Length < 8)
                 return (false, "Das neue Passwort muss mindestens 8 Zeichen lang sein.");
 

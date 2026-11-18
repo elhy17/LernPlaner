@@ -17,6 +17,7 @@ namespace App_LernPlaner.Services
 
         public async Task AddXpAsync(int userId, int amount)
         {
+            if (!AppConfig.UseMockData && Remote.RemoteClient.Current != null) return;
             if (AppConfig.UseMockData)
             {
                 var user = MockDatabase.Users.FirstOrDefault(u => u.UserId == userId);
@@ -29,6 +30,7 @@ namespace App_LernPlaner.Services
 
         public async Task AwardOnSubmissionAsync(int userId, bool isLate)
         {
+            if (!AppConfig.UseMockData && Remote.RemoteClient.Current != null) return;
             await AddXpAsync(userId, isLate ? XpHelpers.LateSubmission : XpHelpers.OnTimeSubmission);
 
             var submissionService = new SubmissionService();
@@ -53,6 +55,7 @@ namespace App_LernPlaner.Services
 
         public async Task AwardOnGradeAsync(int userId, int gradeValue)
         {
+            if (!AppConfig.UseMockData && Remote.RemoteClient.Current != null) return;
             if (gradeValue == 1)
             {
                 await AddXpAsync(userId, XpHelpers.Grade1);
@@ -66,6 +69,7 @@ namespace App_LernPlaner.Services
 
         public async Task AwardOnStudySessionAsync(int userId, int durationMin)
         {
+            if (!AppConfig.UseMockData && Remote.RemoteClient.Current != null) return;
             int hours = durationMin / 60;
             if (hours > 0) await AddXpAsync(userId, hours * XpHelpers.StudyHour);
 
@@ -76,6 +80,7 @@ namespace App_LernPlaner.Services
 
         public async Task AwardDailyLoginAsync(int userId)
         {
+            if (!AppConfig.UseMockData && Remote.RemoteClient.Current != null) return;
             await new NotificationService().AwardDailyLoginMarkerAsync(userId);
             await AddXpAsync(userId, XpHelpers.DailyLogin);
         }

@@ -1,94 +1,67 @@
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Threading.Tasks;
-using App_LernPlaner.Database;
 using App_LernPlaner.Models;
-using MySql.Data.MySqlClient;
+using LernPlaner.Core;
+using App_LernPlaner.Remote;
 
-namespace App_LernPlaner.Repositories
+namespace App_LernPlaner.Repositories;
+public class NotificationRepository
 {
-    public class NotificationRepository
+    public async Task<List<Notification>> GetForUserAsync(int userId, CancellationToken cancellationToken = default)
     {
-        private readonly db_verbindung _db = new();
+        if (RemoteClient.Current != null)
+            return await RemoteClient.Current.CallAsync<List<Notification>>("Notification.GetForUserAsync", new object? [] { userId }, cancellationToken);
+        await using var db = DatabaseSettings.Create();
+        return await new LernPlaner.Core.Repositories.NotificationRepository(db).GetForUserAsync(userId, cancellationToken);
+    }
 
-        public async Task<List<Notification>> GetForUserAsync(int userId)
+    public async Task<int> CountUnreadAsync(int userId, CancellationToken cancellationToken = default)
+    {
+        if (RemoteClient.Current != null)
+            return await RemoteClient.Current.CallAsync<int>("Notification.CountUnreadAsync", new object? [] { userId }, cancellationToken);
+        await using var db = DatabaseSettings.Create();
+        return await new LernPlaner.Core.Repositories.NotificationRepository(db).CountUnreadAsync(userId, cancellationToken);
+    }
+
+    public async Task InsertAsync(int userId, string message, CancellationToken cancellationToken = default)
+    {
+        if (RemoteClient.Current != null)
         {
-            var result = new List<Notification>();
-            using var conn = _db.GetConnection();
-            await conn.OpenAsync();
-
-            using var cmd = new MySqlCommand("SELECT * FROM Notifications WHERE UserId = @u ORDER BY TriggerAt DESC", conn);
-            cmd.Parameters.AddWithValue("@u", userId);
-
-            using var reader = await cmd.ExecuteReaderAsync();
-            while (await reader.ReadAsync())
-                result.Add(Map(reader));
-
-            return result;
+            await RemoteClient.Current.CallAsync("Notification.InsertAsync", new object? [] { userId, message }, cancellationToken);
+            return;
         }
 
-        public async Task<int> CountUnreadAsync(int userId)
-        {
-            using var conn = _db.GetConnection();
-            await conn.OpenAsync();
+        await using var db = DatabaseSettings.Create();
+        await new LernPlaner.Core.Repositories.NotificationRepository(db).InsertAsync(userId, message, cancellationToken);
+    }
 
-            using var cmd = new MySqlCommand("SELECT COUNT(*) FROM Notifications WHERE UserId = @u AND (IsRead = 0 OR IsRead IS NULL)", conn);
-            cmd.Parameters.AddWithValue("@u", userId);
-            return Convert.ToInt32(await cmd.ExecuteScalarAsync());
+    public async Task<bool> ExistsSimilarAsync(int userId, string messagePrefix, CancellationToken cancellationToken = default)
+    {
+        if (RemoteClient.Current != null)
+            return await RemoteClient.Current.CallAsync<bool>("Notification.ExistsSimilarAsync", new object? [] { userId, messagePrefix }, cancellationToken);
+        await using var db = DatabaseSettings.Create();
+        return await new LernPlaner.Core.Repositories.NotificationRepository(db).ExistsSimilarAsync(userId, messagePrefix, cancellationToken);
+    }
+
+    public async Task MarkAsReadAsync(int notifId, CancellationToken cancellationToken = default)
+    {
+        if (RemoteClient.Current != null)
+        {
+            await RemoteClient.Current.CallAsync("Notification.MarkAsReadAsync", new object? [] { notifId }, cancellationToken);
+            return;
         }
 
-        public async Task InsertAsync(int userId, string message)
-        {
-            using var conn = _db.GetConnection();
-            await conn.OpenAsync();
+        await using var db = DatabaseSettings.Create();
+        await new LernPlaner.Core.Repositories.NotificationRepository(db).MarkAsReadAsync(notifId, cancellationToken);
+    }
 
-            using var cmd = new MySqlCommand(
-                "INSERT INTO Notifications (UserId, Message, TriggerAt, IsRead) VALUES (@u, @m, @t, 0)", conn);
-            cmd.Parameters.AddWithValue("@u", userId);
-            cmd.Parameters.AddWithValue("@m", message);
-            cmd.Parameters.AddWithValue("@t", DateTime.Now);
-            await cmd.ExecuteNonQueryAsync();
+    public async Task MarkAllAsReadAsync(int userId, CancellationToken cancellationToken = default)
+    {
+        if (RemoteClient.Current != null)
+        {
+            await RemoteClient.Current.CallAsync("Notification.MarkAllAsReadAsync", new object? [] { userId }, cancellationToken);
+            return;
         }
 
-        public async Task<bool> ExistsSimilarAsync(int userId, string messagePrefix)
-        {
-            using var conn = _db.GetConnection();
-            await conn.OpenAsync();
-
-            using var cmd = new MySqlCommand("SELECT COUNT(*) FROM Notifications WHERE UserId = @u AND Message LIKE @m", conn);
-            cmd.Parameters.AddWithValue("@u", userId);
-            cmd.Parameters.AddWithValue("@m", messagePrefix + "%");
-            return Convert.ToInt32(await cmd.ExecuteScalarAsync()) > 0;
-        }
-
-        public async Task MarkAsReadAsync(int notifId)
-        {
-            using var conn = _db.GetConnection();
-            await conn.OpenAsync();
-
-            using var cmd = new MySqlCommand("UPDATE Notifications SET IsRead = 1 WHERE NotifId = @id", conn);
-            cmd.Parameters.AddWithValue("@id", notifId);
-            await cmd.ExecuteNonQueryAsync();
-        }
-
-        public async Task MarkAllAsReadAsync(int userId)
-        {
-            using var conn = _db.GetConnection();
-            await conn.OpenAsync();
-
-            using var cmd = new MySqlCommand("UPDATE Notifications SET IsRead = 1 WHERE UserId = @u", conn);
-            cmd.Parameters.AddWithValue("@u", userId);
-            await cmd.ExecuteNonQueryAsync();
-        }
-
-        private static Notification Map(IDataRecord r) => new()
-        {
-            NotifId = Convert.ToInt32(r["NotifId"]),
-            UserId = r["UserId"] == DBNull.Value ? 0 : Convert.ToInt32(r["UserId"]),
-            Message = r["Message"] as string ?? string.Empty,
-            TriggerAt = r["TriggerAt"] == DBNull.Value ? DateTime.Now : Convert.ToDateTime(r["TriggerAt"]),
-            IsRead = r["IsRead"] != DBNull.Value && Convert.ToBoolean(r["IsRead"])
-        };
+        await using var db = DatabaseSettings.Create();
+        await new LernPlaner.Core.Repositories.NotificationRepository(db).MarkAllAsReadAsync(userId, cancellationToken);
     }
 }

@@ -73,9 +73,9 @@ namespace App_LernPlaner.Views.Admin
             Close();
         }
 
-        private void BtnLogout_Click(object sender, RoutedEventArgs e)
+        private async void BtnLogout_Click(object sender, RoutedEventArgs e)
         {
-            sessionManager.Logout();
+            await sessionManager.LogoutAsync();
             var login = new LoginPage();
             Application.Current.MainWindow = login;
             login.Show();

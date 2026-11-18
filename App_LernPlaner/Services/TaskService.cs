@@ -1,4 +1,4 @@
-﻿using App_LernPlaner.Models;
+using App_LernPlaner.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +30,7 @@ namespace App_LernPlaner.Services
         // FA-22: Benachrichtigung bei neuer Aufgabe für alle Mitglieder der Klasse
         private static async Task NotifyClassOnCreateAsync(Models.StudyTask task)
         {
-            if (!task.ClassId.HasValue) return;
+            if (!task.ClassId.HasValue || Remote.RemoteClient.Current != null) return;
 
             var members = await new ClassService().GetMembersAsync(task.ClassId.Value, role: 2);
             var notifications = new NotificationService();

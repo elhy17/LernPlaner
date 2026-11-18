@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Threading;
@@ -21,6 +21,7 @@ namespace App_LernPlaner
 
             try
             {
+                Remote.RemoteClient.ConfigureFromEnvironment();
                 var window = new Views.LoginPage();
                 window.Show();
             }

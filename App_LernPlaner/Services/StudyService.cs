@@ -33,7 +33,7 @@ namespace App_LernPlaner.Services
             var session = new StudySession
             {
                 UserId = userId,
-                TaskId = (uint)taskId,
+                TaskId = taskId == 0 ? null : taskId,
                 StartTime = System.DateTime.Now,
                 DurationMin = durationMin,
                 Notes = notes ?? string.Empty

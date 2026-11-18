@@ -1,4 +1,4 @@
-﻿using App_LernPlaner.Commands;
+using App_LernPlaner.Commands;
 using App_LernPlaner.Models;
 using App_LernPlaner.Services;
 using System;
@@ -28,7 +28,7 @@ namespace App_LernPlaner.ViewModels
         public Visibility NoNotificationsVisibility => RecentNotifications.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
 
 
-        private string _grettingText;
+        private string _grettingText = string.Empty;
         public string GreettingText
         {
             get => _grettingText;
@@ -39,7 +39,7 @@ namespace App_LernPlaner.ViewModels
             }
         }
 
-        private string _currentDateText;
+        private string _currentDateText = string.Empty;
         public string CurrentDateText
         {
             get => _currentDateText;
@@ -84,7 +84,7 @@ namespace App_LernPlaner.ViewModels
             }
         }
 
-        private string _durchschnittsnote;
+        private string _durchschnittsnote = string.Empty;
         public string Durchschnittsnote
         {
             get => _durchschnittsnote;
